@@ -22,10 +22,7 @@ OpenAI class >> simpleExample [
 	"Set up the headers"
 	client
 		headerAt: 'Content-Type' put: 'application/json';
-		headerAt: 'Authorization'
-		put:
-			'Bearer '
-			, 'sk-proj-...'.
+		headerAt: 'Authorization' put: 'Bearer ' , 'sk-proj-......'.
 
 	"Prepare the JSON payload"
 	json := STONJSON toString: {

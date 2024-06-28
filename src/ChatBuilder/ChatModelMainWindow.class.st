@@ -9,7 +9,10 @@ Class {
 		'openUserConversationButton',
 		'openSystemConversationButton',
 		'sendConversationButton',
-		'textInput'
+		'textInput',
+		'userConversationDialog',
+		'systemConversationDialog',
+		'sendConversationDialog'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -52,6 +55,11 @@ ChatModelMainWindow >> initializePresenters [
     sendConversationButton := self newButton
         label: 'Send Conversation';
         action: [ self sendConversation ].
+    
+    "Initialize dialog instances"
+    userConversationDialog := nil.
+    systemConversationDialog := nil.
+    sendConversationDialog := nil.
 ]
 
 { #category : 'ui' }
@@ -59,30 +67,36 @@ ChatModelMainWindow >> openClassSelector [
     ChatMethodSelector open
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 ChatModelMainWindow >> openSystemConversation [
-    self openTextDialog: 'Open System Conversation' initialText: self application systemConversation onAccept: [ :text | self application systemConversation: text ]
+    systemConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
+    systemConversationDialog := self openTextDialog: 'Open System Conversation' initialText: self application systemConversation onAccept: [ :text | self application systemConversation: text ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 ChatModelMainWindow >> openTextDialog: title initialText: initialText onAccept: acceptBlock [
     | dialog |
     dialog := TextInputDialog new.
     dialog
         title: title;
         initialText: (initialText ifNil: ['']);
-        acceptAction: acceptBlock.
-    dialog open
+        acceptAction: [ :text | 
+            acceptBlock value: text.
+            dialog := nil ].
+    dialog open.
+    ^ dialog
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 ChatModelMainWindow >> openUserConversation [
-    self openTextDialog: 'Open User Conversation' initialText: self application userConversation onAccept: [ :text | self application userConversation: text ]
+    userConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
+    userConversationDialog := self openTextDialog: 'Open User Conversation' initialText: self application userConversation onAccept: [ :text | self application userConversation: text ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 ChatModelMainWindow >> sendConversation [
-    self openTextDialog: 'Send Conversation' initialText: self application userConversation onAccept: [ :text | "Implement send logic here" ]
+    sendConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
+    sendConversationDialog := self openTextDialog: 'Send Conversation' initialText: self application userConversation onAccept: [ :text | "Implement send logic here" ]
 ]
 
 { #category : 'accessing' }

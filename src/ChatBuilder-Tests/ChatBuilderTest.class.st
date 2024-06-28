@@ -1,5 +1,5 @@
 Class {
-	#name : 'HtmlBuilderTest',
+	#name : 'ChatBuilderTest',
 	#superclass : 'TestCase',
 	#category : 'ChatBuilder-Tests-unit',
 	#package : 'ChatBuilder-Tests',

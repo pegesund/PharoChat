@@ -1,0 +1,79 @@
+"
+Simple text input dialog
+"
+Class {
+	#name : 'TextInputDialog',
+	#superclass : 'SpPresenter',
+	#instVars : [
+		'textInput',
+		'acceptAction'
+	],
+	#category : 'ChatBuilder',
+	#package : 'ChatBuilder'
+}
+
+{ #category : 'visiting' }
+TextInputDialog >> accept [
+    acceptAction value: textInput text.
+    self close
+]
+
+{ #category : 'accessing' }
+TextInputDialog >> acceptAction: aBlock [
+    acceptAction := aBlock
+]
+
+{ #category : 'visiting' }
+TextInputDialog >> acceptAndClose: dialogWindow [
+    acceptAction value: textInput text.
+    dialogWindow close
+]
+
+{ #category : 'actions' }
+TextInputDialog >> cancel [
+    self window close
+]
+
+{ #category : 'visiting' }
+TextInputDialog >> defaultLayout [
+    ^ SpBoxLayout newVertical
+        add: textInput;
+        yourself
+]
+
+{ #category : 'as yet unclassified' }
+TextInputDialog >> initialText: aString [
+    textInput text: aString
+]
+
+{ #category : 'initialization' }
+TextInputDialog >> initialize [
+    super initialize.
+    self title: 'Input Dialog'
+]
+
+{ #category : 'visiting' }
+TextInputDialog >> initializeDialogWindow: aDialogWindowPresenter [
+    aDialogWindowPresenter
+        title: 'Input Dialog';
+        initialExtent: 500@400;
+        addButton: 'OK' do: [ :dialog | self acceptAndClose: dialog ];
+        addButton: 'Cancel' do: [ :dialog | dialog close ]
+]
+
+{ #category : 'visiting' }
+TextInputDialog >> initializePresenters [
+    textInput := self newText.
+    textInput text: ''.
+    textInput withScrollBars
+]
+
+{ #category : 'showing' }
+TextInputDialog >> open [
+    ^ self openDialog
+]
+
+{ #category : 'accessing' }
+TextInputDialog >> title: aString [
+    self withWindowDo: [ :w | w title: aString ]
+]

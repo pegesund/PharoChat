@@ -62,6 +62,23 @@ ChatEnvironment >> menuItem [
     ^ #'library'
 ]
 
+{ #category : 'executing' }
+ChatEnvironment >> pexecute [
+
+	| ak |
+	ak := UIManager default
+		          request: 'Enter your OpenAI API Key:'
+		          initialAnswer: ''
+		          title: 'OpenAI API Key'.
+
+	ak ifNotNil: [
+		ak
+			ifNotEmpty: [
+				(self class) setApiKey: ak.
+				UIManager default inform: 'API Key has been set successfully.' ]
+			ifEmpty: [ UIManager default inform: 'API Key cannot be empty.' ] ]
+]
+
 { #category : 'as yet unclassified' }
 ChatEnvironment >> promptAndSetOpenAIAPIKey [
         | apiKey |
@@ -78,21 +95,4 @@ ChatEnvironment >> promptAndSetOpenAIAPIKey [
                 UIManager default inform: 'API Key cannot be empty.'
             ]
         ]
-]
-
-{ #category : 'executing' }
-ChatEnvironment >> pexecute [
-
-	| ak |
-	ak := UIManager default
-		          request: 'Enter your OpenAI API Key:'
-		          initialAnswer: ''
-		          title: 'OpenAI API Key'.
-
-	ak ifNotNil: [
-		ak
-			ifNotEmpty: [
-				(self class) setApiKey: ak.
-				UIManager default inform: 'API Key has been set successfully.' ]
-			ifEmpty: [ UIManager default inform: 'API Key cannot be empty.' ] ]
 ]

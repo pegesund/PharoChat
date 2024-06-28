@@ -81,7 +81,7 @@ ChatEnvironment >> promptAndSetOpenAIAPIKey [
 ]
 
 { #category : 'executing' }
-ChatEnvironment >> |execute [
+ChatEnvironment >> pexecute [
 
 	| ak |
 	ak := UIManager default

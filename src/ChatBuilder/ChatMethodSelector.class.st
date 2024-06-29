@@ -99,12 +99,10 @@ ChatMethodSelector >> initialExtent [
     ^ 1000@600
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 ChatMethodSelector >> initialize [
     super initialize.
     selectedMethods := Set new.
-    repository := IceRepository registry detect: [ :repo | 
-        repo includesPackageNamed: self class package name ]
 ]
 
 { #category : 'initialization' }
@@ -223,7 +221,7 @@ ChatMethodSelector >> selectMethodInSelectedList: aMethod [
 
 { #category : 'accessing' }
 ChatMethodSelector >> selectedMethods [
-    ^ selectedMethods
+    ^ selectedMethods asOrderedCollection
 ]
 
 { #category : 'TOREMOVE' }

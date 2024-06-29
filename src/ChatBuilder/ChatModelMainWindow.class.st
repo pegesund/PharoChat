@@ -12,7 +12,9 @@ Class {
 		'textInput',
 		'userConversationDialog',
 		'systemConversationDialog',
-		'sendConversationDialog'
+		'sendConversationDialog',
+		'modelSelector',
+		'chatMethodSelector'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -36,6 +38,19 @@ ChatModelMainWindow >> defaultLayout [
         add: openSystemConversationButton;
         add: sendConversationButton;
         yourself
+]
+
+{ #category : 'as yet unclassified' }
+ChatModelMainWindow >> getSelectedMethods [
+    chatMethodSelector 
+        ifNil: [ ^ OrderedCollection new ]
+        ifNotNil: [ :selector | ^ selector selectedMethods asOrderedCollection ]
+]
+
+{ #category : 'as yet unclassified' }
+ChatModelMainWindow >> getSelectedMethodsText [
+    "This is a placeholder. Implement the actual logic to get selected methods"
+    ^ 'Selected methods will be shown here'
 ]
 
 { #category : 'initialization' }
@@ -64,7 +79,54 @@ ChatModelMainWindow >> initializePresenters [
 
 { #category : 'ui' }
 ChatModelMainWindow >> openClassSelector [
-    ChatMethodSelector open
+    chatMethodSelector := ChatMethodSelector new.
+    chatMethodSelector open
+]
+
+{ #category : 'as yet unclassified' }
+ChatModelMainWindow >> openSendConversationDialog [
+    | dialog contentPresenter selectedMethods |
+    dialog := SpWindowPresenter new.
+    contentPresenter := SpPresenter new.
+    
+    selectedMethods := self getSelectedMethods.
+    
+    contentPresenter layout: (SpBoxLayout newVertical
+        spacing: 5;
+        add: 'System Conversation' expand: false;
+        add: (contentPresenter newText
+            text: (self application systemConversation ifNil: ['']);
+            enabled: false;
+            beNotEditable) height: 100;
+        add: 'User Conversation' expand: false;
+        add: (contentPresenter newText
+            text: (self application userConversation ifNil: ['']);
+            enabled: false;
+            beNotEditable) height: 100;
+        add: 'Selected Methods' expand: false;
+        add: (contentPresenter newList
+            items: selectedMethods;
+            display: [ :method | 
+                method 
+                    ifNil: [ 'No methods selected' ]
+                    ifNotNil: [ method methodClass name, ' >> ', method selector ] ];
+            enabled: false) height: 100;
+        add: 'Select Model' expand: false;
+        add: (modelSelector := contentPresenter newDropList
+            items: #('chatgpt4' 'chatgpt3-turbo');
+            selectIndex: 1) height: 30;
+        add: (contentPresenter newButton
+            label: 'Send';
+            action: [ self sendConversationToModel ]) height: 30;
+        yourself).
+
+    dialog
+        title: 'Send Conversation';
+        initialExtent: 600@500;
+        presenter: contentPresenter.
+    
+    dialog open.
+    ^ dialog
 ]
 
 { #category : 'initialization' }
@@ -96,7 +158,24 @@ ChatModelMainWindow >> openUserConversation [
 { #category : 'initialization' }
 ChatModelMainWindow >> sendConversation [
     sendConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
-    sendConversationDialog := self openTextDialog: 'Send Conversation' initialText: self application userConversation onAccept: [ :text | "Implement send logic here" ]
+    sendConversationDialog := self openSendConversationDialog.
+]
+
+{ #category : 'as yet unclassified' }
+ChatModelMainWindow >> sendConversationToModel [
+    | responseDialog |
+    responseDialog := SpWindowPresenter new.
+    responseDialog
+        title: 'Model Response';
+        initialExtent: 400@300;
+        presenter: (SpPresenter new
+            layout: (SpBoxLayout newVertical
+                add: (self newText 
+                    text: 'This is a dummy response from the model. Implement actual API call here.';
+                    enabled: false) expand: true;
+                yourself)).
+    
+    responseDialog open.
 ]
 
 { #category : 'accessing' }

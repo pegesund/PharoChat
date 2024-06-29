@@ -52,12 +52,11 @@ TextInputDialog >> initialize [
     self title: 'Input Dialog'
 ]
 
-{ #category : 'visiting' }
+{ #category : 'initialization' }
 TextInputDialog >> initializeDialogWindow: aDialogWindowPresenter [
     aDialogWindowPresenter
-        title: 'Input Dialog';
         initialExtent: 500@400;
-        addButton: 'OK' do: [ :dialog | self acceptAndClose: dialog ];
+        addButton: 'Save' do: [ :dialog | self acceptAndClose: dialog ];
         addButton: 'Cancel' do: [ :dialog | dialog close ]
 ]
 

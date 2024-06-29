@@ -6,12 +6,29 @@ Class {
 	#superclass : 'SpApplication',
 	#instVars : [
 		'userConversation',
-		'systemConversation'
+		'systemConversation',
+		'savedMethods'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
 	#tag : 'UI'
 }
+
+{ #category : 'initialization' }
+ChatModelApplication >> initialize [
+    super initialize.
+    savedMethods := OrderedCollection new.
+]
+
+{ #category : 'accessing' }
+ChatModelApplication >> savedMethods [
+    ^ savedMethods
+]
+
+{ #category : 'accessing' }
+ChatModelApplication >> savedMethods: aCollection [
+    savedMethods := aCollection asOrderedCollection
+]
 
 { #category : 'accessing' }
 ChatModelApplication >> systemConversation [

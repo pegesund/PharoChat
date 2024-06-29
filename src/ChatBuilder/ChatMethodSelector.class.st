@@ -12,7 +12,8 @@ Class {
 		'selectedMethodsList',
 		'repository',
 		'packageSearchInput',
-		'removeButton'
+		'removeButton',
+		'saveButton'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -31,25 +32,13 @@ ChatMethodSelector >> allPackages [
 
 { #category : 'layout' }
 ChatMethodSelector >> defaultLayout [
-    ^ SpPanedLayout newHorizontal
-        add: (SpPanedLayout newHorizontal
-            add: (SpBoxLayout newVertical
-                add: 'Packages' expand: false;
-                add: packageSearchInput expand: false;
-                add: packageList;
-                add: 'Classes' expand: false;
-                add: classList;
-                yourself);
-            add: (SpBoxLayout newVertical
-                add: 'Changed Methods' expand: false;
-                add: methodList;
-                yourself);
+    ^ SpBoxLayout newVertical
+        add: (SpBoxLayout newHorizontal
+            add: packageList;
+            add: classList;
             yourself);
-        add: (SpBoxLayout newVertical
-            add: 'Selected Methods' expand: false;
-            add: selectedMethodsList;
-            add: removeButton expand: false;
-            yourself);
+        add: methodList;
+        add: saveButton expand: false;
         yourself
 ]
 
@@ -102,88 +91,54 @@ ChatMethodSelector >> initialExtent [
 { #category : 'initialization' }
 ChatMethodSelector >> initialize [
     super initialize.
-    selectedMethods := Set new.
+    selectedMethods := OrderedCollection new
 ]
 
 { #category : 'initialization' }
 ChatMethodSelector >> initializePresenters [
-
-	packageSearchInput := self newTextInput.
-	packageList := self newList.
-	classList := self newList.
-	methodList := self newTable.
-	selectedMethodsList := self newTable.
-	removeButton := self newButton.
-	selectedMethods := Set new.
-
-	packageSearchInput
-		placeholder: 'Search packages...';
-		whenTextChangedDo: [ :text | self updatePackageList ].
-
-	packageList
-		items: self allPackages;
-		display: [ :package | package name ];
-		whenSelectionChangedDo: [ :selection |
-			selection selectedItem ifNotNil: [ :package |
-					self updateClassesFor: package ] ].
-
-	classList
-		display: [ :class | class name ];
-		whenSelectionChangedDo: [ :selection |
-			selection selectedItem ifNotNil: [ :class |
-					self updateMethodsFor: class ] ].
-
-
-	methodList
-		addColumn: (SpCheckBoxTableColumn new
-				 evaluated: [ :method | selectedMethods includes: method ];
-				 onActivation: [ :method |
-					 Transcript
-						 show: 'Method activated: ' , method selector;
-						 cr.
-					 selectedMethods add: method.
-					 self updateSelectedMethodsList ];
-				 onDeactivation: [ :method |
-					 Transcript
-						 show: 'Method deactivated: ' , method selector;
-						 cr.
-					 selectedMethods remove: method.
-					 self updateSelectedMethodsList ];
-				 width: 20);
-		addColumn: (SpStringTableColumn new
-				 title: 'Method';
-				 evaluated: [ :method | method selector ];
-				 width: 200);
-		addColumn: (SpStringTableColumn new
-				 title: 'Type';
-				 evaluated: [ :method |
-					 method methodClass isMeta
-						 ifTrue: [ 'Class' ]
-						 ifFalse: [ 'Instance' ] ];
-				 width: 100).
-	selectedMethodsList
-		addColumn: (SpCheckBoxTableColumn new
-				 evaluated: [ :method | true ];
-				 onActivation: [ :method | self updateRemoveButtonState ];
-				 onDeactivation: [ :method | self updateRemoveButtonState ];
-				 width: 20);
-		addColumn: (SpStringTableColumn new
-				 title: 'Method';
-				 evaluated: [ :method |
-					 method methodClass name , ' >> ' , method selector ];
-				 yourself);
-		whenSelectionChangedDo: [ :selection |
-			Transcript
-				show: 'Selection changed in selectedMethodsList';
-				cr.
-			self updateRemoveButtonState ].
-
-	removeButton
-		label: 'Remove Selected';
-		action: [ self removeSelectedMethods ];
-		enabled: false.
-
-	self updatePackageList
+    packageList := self newList.
+    classList := self newList.
+    methodList := self newTable.
+    saveButton := self newButton.
+    
+    packageList
+        items: RPackageOrganizer default packages sorted;
+        display: [ :package | package name ];
+        whenSelectionChangedDo: [ :selection | 
+            selection selectedItem 
+                ifNotNil: [ :package | self updateClassesFor: package ] ].
+    
+    classList
+        display: [ :class | class name ];
+        whenSelectionChangedDo: [ :selection |
+            selection selectedItem
+                ifNotNil: [ :class | self updateMethodsFor: class ] ].
+    
+    methodList
+        addColumn: (SpCheckBoxTableColumn new
+            evaluated: [ :method | selectedMethods includes: method ];
+            onActivation: [ :method | 
+                selectedMethods add: method.
+                self updateSaveButtonState ];
+            onDeactivation: [ :method | 
+                selectedMethods remove: method.
+                self updateSaveButtonState ];
+            width: 20);
+        addColumn: (SpStringTableColumn new
+            title: 'Method';
+            evaluated: [ :method | method selector ];
+            yourself);
+        addColumn: (SpStringTableColumn new
+            title: 'Class';
+            evaluated: [ :method | method methodClass name ];
+            yourself).
+    
+    saveButton
+        label: 'Save Selected Methods';
+        action: [ self saveSelectedMethods ];
+        enabled: false.
+    
+    self updateSaveButtonState
 ]
 
 { #category : 'as yet unclassified' }
@@ -210,6 +165,15 @@ ChatMethodSelector >> removeSelectedMethods [
 ]
 
 { #category : 'as yet unclassified' }
+ChatMethodSelector >> saveSelectedMethods [
+    | app |
+    app := self application.
+    app savedMethods: self selectedMethods.
+    self inform: 'Selected methods saved.'.
+    self application inspect.
+]
+
+{ #category : 'as yet unclassified' }
 ChatMethodSelector >> selectMethodInSelectedList: aMethod [
     | index |
     index := selectedMethodsList items indexOf: aMethod.
@@ -221,7 +185,7 @@ ChatMethodSelector >> selectMethodInSelectedList: aMethod [
 
 { #category : 'accessing' }
 ChatMethodSelector >> selectedMethods [
-    ^ selectedMethods asOrderedCollection
+    ^ selectedMethods ifNil: [ selectedMethods := OrderedCollection new ]
 ]
 
 { #category : 'TOREMOVE' }
@@ -272,6 +236,13 @@ ChatMethodSelector >> updateRemoveButtonState [
         show: ' Selected items: ', selectedMethodsList selection selectedItems size asString;
         show: ' Total items: ', selectedMethodsList items size asString;
         cr.
+]
+
+{ #category : 'as yet unclassified' }
+ChatMethodSelector >> updateSaveButtonState [
+    saveButton ifNotNil: [
+        saveButton enabled: (selectedMethods notNil and: [selectedMethods notEmpty])
+    ]
 ]
 
 { #category : 'as yet unclassified' }

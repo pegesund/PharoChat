@@ -42,9 +42,7 @@ ChatModelMainWindow >> defaultLayout [
 
 { #category : 'as yet unclassified' }
 ChatModelMainWindow >> getSelectedMethods [
-    chatMethodSelector 
-        ifNil: [ ^ OrderedCollection new ]
-        ifNotNil: [ :selector | ^ selector selectedMethods asOrderedCollection ]
+    ^ self application savedMethods
 ]
 
 { #category : 'as yet unclassified' }
@@ -80,53 +78,58 @@ ChatModelMainWindow >> initializePresenters [
 { #category : 'ui' }
 ChatModelMainWindow >> openClassSelector [
     chatMethodSelector := ChatMethodSelector new.
+    chatMethodSelector application: self application.
     chatMethodSelector open
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 ChatModelMainWindow >> openSendConversationDialog [
-    | dialog contentPresenter selectedMethods |
-    dialog := SpWindowPresenter new.
-    contentPresenter := SpPresenter new.
-    
-    selectedMethods := self getSelectedMethods.
-    
-    contentPresenter layout: (SpBoxLayout newVertical
-        spacing: 5;
-        add: 'System Conversation' expand: false;
-        add: (contentPresenter newText
-            text: (self application systemConversation ifNil: ['']);
-            enabled: false;
-            beNotEditable) height: 100;
-        add: 'User Conversation' expand: false;
-        add: (contentPresenter newText
-            text: (self application userConversation ifNil: ['']);
-            enabled: false;
-            beNotEditable) height: 100;
-        add: 'Selected Methods' expand: false;
-        add: (contentPresenter newList
-            items: selectedMethods;
-            display: [ :method | 
-                method 
-                    ifNil: [ 'No methods selected' ]
-                    ifNotNil: [ method methodClass name, ' >> ', method selector ] ];
-            enabled: false) height: 100;
-        add: 'Select Model' expand: false;
-        add: (modelSelector := contentPresenter newDropList
-            items: #('chatgpt4' 'chatgpt3-turbo');
-            selectIndex: 1) height: 30;
-        add: (contentPresenter newButton
-            label: 'Send';
-            action: [ self sendConversationToModel ]) height: 30;
-        yourself).
 
-    dialog
-        title: 'Send Conversation';
-        initialExtent: 600@500;
-        presenter: contentPresenter.
-    
-    dialog open.
-    ^ dialog
+	| presenter window selectedMethods |
+	presenter := SpPresenter new.
+	selectedMethods := self getSelectedMethods.
+
+	presenter layout: (SpBoxLayout newVertical
+			 spacing: 10;
+			 add: 'System Conversation' expand: false;
+			 add: (presenter newText
+					  text: (self application systemConversation ifNil: [ '' ]);
+					  enabled: false;
+					  beNotEditable)
+			 height: 200;
+			 add: 'User Conversation' expand: false;
+			 add: (presenter newText
+					  text: (self application userConversation ifNil: [ '' ]);
+					  enabled: false;
+					  beNotEditable)
+			 height: 200;
+			 add: 'Selected Methods' expand: false;
+			 add: (presenter newList
+					  items: selectedMethods;
+					  display: [ :method |
+						  method
+							  ifNil: [ 'No methods selected' ]
+							  ifNotNil: [
+								  method methodClass name , ' >> ' , method selector ] ];
+					  enabled: false)
+			 height: 200;
+			 add: 'Select Model' expand: false;
+			 add: (modelSelector := presenter newDropList
+					                   items: #( 'chatgpt4' 'chatgpt3-turbo' );
+					                   selectIndex: 1)
+			 height: 30;
+			 add: (presenter newButton
+					  label: 'Send';
+					  action: [ self sendConversationToModel ])
+			 height: 40;
+			 yourself).
+ 	
+
+	window := presenter open.
+	window title: 'Send to Model'.
+	window initialExtent: 1000 @ 1000.
+
+	^ presenter
 ]
 
 { #category : 'initialization' }
@@ -155,10 +158,15 @@ ChatModelMainWindow >> openUserConversation [
     userConversationDialog := self openTextDialog: 'Open User Conversation' initialText: self application userConversation onAccept: [ :text | self application userConversation: text ]
 ]
 
-{ #category : 'initialization' }
+{ #category : 'as yet unclassified' }
 ChatModelMainWindow >> sendConversation [
-    sendConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
-    sendConversationDialog := self openSendConversationDialog.
+	"initialization"
+
+	sendConversationDialog ifNotNil: [ :dialog |
+		dialog window ifNotNil: #close ].
+	sendConversationDialog := self openSendConversationDialog.
+	
+	
 ]
 
 { #category : 'as yet unclassified' }
@@ -176,9 +184,4 @@ ChatModelMainWindow >> sendConversationToModel [
                 yourself)).
     
     responseDialog open.
-]
-
-{ #category : 'accessing' }
-ChatModelMainWindow >> title [
-    ^ 'Chat Model Interface'
 ]

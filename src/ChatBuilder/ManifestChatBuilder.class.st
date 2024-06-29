@@ -38,10 +38,24 @@ ManifestChatBuilder class >> ruleExcessiveArgumentsRuleV1FalsePositive [
 ]
 
 { #category : 'code-critics' }
+ManifestChatBuilder class >> ruleExcessiveVariablesRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGClassDefinition #(#ChatModelMainWindow)) #'2024-06-29T19:00:47.063567+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestChatBuilder class >> ruleLongMethodsRuleV1FalsePositive [
 
 	<ignoreForCoverage>
 	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:02:06.214074+02:00') #(#(#RGPackageDefinition #(#ChatBuilder)) #'2024-06-27T12:51:35.763958+02:00') )
+]
+
+{ #category : 'code-critics' }
+ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#ChatModelMainWindow #openSystemConversation #false)) #'2024-06-29T20:32:28.30194+02:00') )
 ]
 
 { #category : 'code-critics' }

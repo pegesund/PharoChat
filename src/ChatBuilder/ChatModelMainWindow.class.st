@@ -9,11 +9,9 @@ Class {
 		'openUserConversationButton',
 		'openSystemConversationButton',
 		'sendConversationButton',
-		'textInput',
 		'userConversationDialog',
 		'systemConversationDialog',
 		'sendConversationDialog',
-		'modelSelector',
 		'chatMethodSelector'
 	],
 	#category : 'ChatBuilder-UI',
@@ -81,9 +79,15 @@ ChatModelMainWindow >> openClassSelector [
     chatMethodSelector open
 ]
 
-{ #category : 'initialization' }
+{ #category : 'as yet unclassified' }
 ChatModelMainWindow >> openSendConversationDialog [
     ^ SendToModelDialog openWithApplication: (self application)
+]
+
+{ #category : 'initialization' }
+ChatModelMainWindow >> openSendConversationDialog: modelSelector [ 
+
+	^ SendToModelDialog openWithApplication: self application
 ]
 
 { #category : 'initialization' }
@@ -110,34 +114,6 @@ ChatModelMainWindow >> openTextDialog: title initialText: initialText onAccept: 
 ChatModelMainWindow >> openUserConversation [
     userConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
     userConversationDialog := self openTextDialog: 'Open User Conversation' initialText: self application userConversation onAccept: [ :text | self application userConversation: text ]
-]
-
-{ #category : 'as yet unclassified' }
-ChatModelMainWindow >> sendConversation [
-	"initialization"
-
-	sendConversationDialog ifNotNil: [ :dialog |
-		dialog window ifNotNil: #close ].
-	sendConversationDialog := self openSendConversationDialog.
-	
-	
-]
-
-{ #category : 'as yet unclassified' }
-ChatModelMainWindow >> sendConversationToModel [
-    | responseDialog |
-    responseDialog := SpWindowPresenter new.
-    responseDialog
-        title: 'Model Response';
-        initialExtent: 400@300;
-        presenter: (SpPresenter new
-            layout: (SpBoxLayout newVertical
-                add: (self newText 
-                    text: 'This is a dummy response from the model. Implement actual API call here.';
-                    enabled: false) expand: true;
-                yourself)).
-    
-    responseDialog open.
 ]
 
 { #category : 'as yet unclassified' }

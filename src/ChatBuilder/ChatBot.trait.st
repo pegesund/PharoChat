@@ -9,3 +9,10 @@ Trait {
 	#package : 'ChatBuilder',
 	#tag : 'chat'
 }
+
+{ #category : 'private' }
+ChatBot >> sendToModel: content [
+
+Transcript crShow: content.
+
+]

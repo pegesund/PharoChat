@@ -27,7 +27,7 @@ ManifestChatBuilder class >> ruleClassNotReferencedRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleCodeCruftLeftInMethodsRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:10:09.632169+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:10:09.632169+02:00') #(#(#RGMethodDefinition #(#ChatBot #sendToModel: #false)) #'2024-06-30T20:53:26.513799+02:00') )
 ]
 
 { #category : 'code-critics' }
@@ -62,5 +62,5 @@ ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleStringConcatenationRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:01:42.737775+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:01:42.737775+02:00') #(#(#RGMethodDefinition #(#ChatModelApplication #concatenateInfoForAPI #false)) #'2024-06-30T20:48:40.58333+02:00') )
 ]

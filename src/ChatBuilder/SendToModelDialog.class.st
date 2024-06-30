@@ -46,6 +46,7 @@ SendToModelDialog >> initialize [
 
 { #category : 'initialization' }
 SendToModelDialog >> initializePresenters [
+    self extent: 500 @ 800.
     self layout: (SpBoxLayout newVertical
         spacing: 10;
         add: 'System Conversation' expand: false;
@@ -80,4 +81,12 @@ SendToModelDialog >> initializePresenters [
             action: [ self sendConversationToModel ])
         height: 40;
         yourself).
+]
+
+{ #category : 'initialization' }
+SendToModelDialog >> initializeWindow: aWindowPresenter [
+
+	super initializeWindow: aWindowPresenter.
+	aWindowPresenter initialExtent: 800 @ 900.
+
 ]

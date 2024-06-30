@@ -67,12 +67,11 @@ ChatModelMainWindow >> initializePresenters [
     
     sendConversationButton := self newButton
         label: 'Send Conversation';
-        action: [ self sendConversation ].
+        action: [ self openSendConversationDialog ].
     
     "Initialize dialog instances"
     userConversationDialog := nil.
     systemConversationDialog := nil.
-    sendConversationDialog := nil.
 ]
 
 { #category : 'ui' }
@@ -84,52 +83,7 @@ ChatModelMainWindow >> openClassSelector [
 
 { #category : 'initialization' }
 ChatModelMainWindow >> openSendConversationDialog [
-
-	| presenter window selectedMethods |
-	presenter := SpPresenter new.
-	selectedMethods := self getSelectedMethods.
-
-	presenter layout: (SpBoxLayout newVertical
-			 spacing: 10;
-			 add: 'System Conversation' expand: false;
-			 add: (presenter newText
-					  text: (self application systemConversation ifNil: [ '' ]);
-					  enabled: false;
-					  beNotEditable)
-			 height: 200;
-			 add: 'User Conversation' expand: false;
-			 add: (presenter newText
-					  text: (self application userConversation ifNil: [ '' ]);
-					  enabled: false;
-					  beNotEditable)
-			 height: 200;
-			 add: 'Selected Methods' expand: false;
-			 add: (presenter newList
-					  items: selectedMethods;
-					  display: [ :method |
-						  method
-							  ifNil: [ 'No methods selected' ]
-							  ifNotNil: [
-								  method methodClass name , ' >> ' , method selector ] ];
-					  enabled: false)
-			 height: 200;
-			 add: 'Select Model' expand: false;
-			 add: (modelSelector := presenter newDropList
-					                   items: #( 'chatgpt4' 'chatgpt3-turbo' );
-					                   selectIndex: 1)
-			 height: 30;
-			 add: (presenter newButton
-					  label: 'Send';
-					  action: [ self sendConversationToModel ])
-			 height: 40;
-			 yourself).
- 	
-
-	window := presenter open.
-	window title: 'Send to Model'.
-	window initialExtent: 1000 @ 1000.
-
-	^ presenter
+    ^ SendToModelDialog openWithApplication: (self application)
 ]
 
 { #category : 'initialization' }
@@ -184,4 +138,10 @@ ChatModelMainWindow >> sendConversationToModel [
                 yourself)).
     
     responseDialog open.
+]
+
+{ #category : 'as yet unclassified' }
+ChatModelMainWindow >> sendConversationToModel: modelName [
+    "Implement the logic to send the conversation to the selected model"
+    self inform: 'Sending conversation to ', modelName.
 ]

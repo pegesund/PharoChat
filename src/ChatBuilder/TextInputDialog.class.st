@@ -12,12 +12,6 @@ Class {
 	#package : 'ChatBuilder'
 }
 
-{ #category : 'visiting' }
-TextInputDialog >> accept [
-    acceptAction value: textInput text.
-    self close
-]
-
 { #category : 'accessing' }
 TextInputDialog >> acceptAction: aBlock [
     acceptAction := aBlock

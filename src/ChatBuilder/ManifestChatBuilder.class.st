@@ -27,7 +27,7 @@ ManifestChatBuilder class >> ruleClassNotReferencedRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleCodeCruftLeftInMethodsRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:10:09.632169+02:00') #(#(#RGMethodDefinition #(#ChatBot #sendToModel: #false)) #'2024-06-30T20:53:26.513799+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:10:09.632169+02:00') #(#(#RGMethodDefinition #(#ChatBot #sendToModel: #false)) #'2024-06-30T20:53:26.513799+02:00') #(#(#RGMethodDefinition #(#OpenAi #sendContent:user:system:model: #false)) #'2024-07-07T14:33:55.595863+02:00') )
 ]
 
 { #category : 'code-critics' }
@@ -62,7 +62,7 @@ ManifestChatBuilder class >> ruleLongMethodsRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#ChatModelMainWindow #openSystemConversation #false)) #'2024-06-29T20:32:28.30194+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ChatModelMainWindow #openSystemConversation #false)) #'2024-06-29T20:32:28.30194+02:00') #(#(#RGMethodDefinition #(#ChatModelMainWindow #openUserConversation #false)) #'2024-07-07T13:55:25.126206+02:00') )
 ]
 
 { #category : 'code-critics' }

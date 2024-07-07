@@ -1,16 +1,14 @@
-"
-Openai stuff
-"
-Class {
-	#name : 'OpenAI',
-	#superclass : 'Object',
-	#category : 'ChatBuilder-chat',
-	#package : 'ChatBuilder',
-	#tag : 'chat'
+Trait {
+	#name : 'OpenAi',
+	#instVars : [
+		'url'
+	],
+	#category : 'ChatBuilder',
+	#package : 'ChatBuilder'
 }
 
 { #category : 'chat' }
-OpenAI class >> simpleExample [
+OpenAi classSide >> simpleExample [
 
 	| client url entity response json jsonObject |
 	"Set up the WebClient"
@@ -64,4 +62,27 @@ OpenAI class >> simpleExample [
 
 	"Don't forget to close the client"
 	client close
+]
+
+{ #category : 'as yet unclassified' }
+OpenAi classSide >> url [
+	^ self shouldBeImplemented
+]
+
+{ #category : 'sending' }
+OpenAi >> sendContent: content user: user system: system model: model [
+
+	Transcript show: 'hupp'
+]
+
+{ #category : 'accessing' }
+OpenAi >> url [
+
+	^ url
+]
+
+{ #category : 'accessing' }
+OpenAi >> url: theUrl [
+
+	url := theUrl .
 ]

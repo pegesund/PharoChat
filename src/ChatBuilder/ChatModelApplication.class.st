@@ -25,14 +25,13 @@ ChatModelApplication >> concatenateInfoForAPI [
 		               methodType := method isClassSide
 			                             ifTrue: [ 'class' ]
 			                             ifFalse: [ 'instance' ].
-		               {
-			               ('sourceCode'
-			                -> (String streamContents: [ :stream |
-					                 stream
-						                 nextPutAll: (class name , ' >> #' , method selector);
-						                 cr;
-						                 nextPutAll: method sourceCode ])) }
-			               asDictionary ].
+		               { ('sourceCode'
+		                -> (String streamContents: [ :stream |
+				                 stream
+					                 nextPutAll:
+						                 class name , ' >> #' , method selector;
+					                 cr;
+					                 nextPutAll: method sourceCode ])) } asDictionary ].
 
 	classesInfo := (self savedMethods collect: [ :method |
 		                method methodClass ]) asSet collect: [ :class |
@@ -54,7 +53,7 @@ ChatModelApplication >> concatenateInfoForAPI [
 	res := res copyReplaceAll: '\r' with: String cr.
 	res := res copyReplaceAll: '\t' with: String tab.
 
-	res inspect.
+	"res inspect."
 
 	^ res
 ]
@@ -73,6 +72,12 @@ ChatModelApplication >> savedMethods [
 { #category : 'accessing' }
 ChatModelApplication >> savedMethods: aCollection [
     savedMethods := aCollection asOrderedCollection
+]
+
+{ #category : 'chat' }
+ChatModelApplication >> sendToChat [
+	"comment stating purpose of instance-side method"
+
 ]
 
 { #category : 'accessing' }

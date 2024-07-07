@@ -92,8 +92,18 @@ ChatModelMainWindow >> openSendConversationDialog: modelSelector [
 
 { #category : 'initialization' }
 ChatModelMainWindow >> openSystemConversation [
-    systemConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
-    systemConversationDialog := self openTextDialog: 'Open System Conversation' initialText: self application systemConversation onAccept: [ :text | self application systemConversation: text ]
+
+	systemConversationDialog ifNotNil: [ :dialog |
+		dialog window ifNotNil: #close ].
+	systemConversationDialog := self
+		                            openTextDialog:
+		                            'Open System Conversation'
+		                            initialText:
+		                            self application systemConversation
+		                            onAccept: [ :text |
+		                            self application systemConversation:
+			                            text ].
+	systemConversationDialog title: 'Enter system text'
 ]
 
 { #category : 'initialization' }
@@ -112,12 +122,26 @@ ChatModelMainWindow >> openTextDialog: title initialText: initialText onAccept: 
 
 { #category : 'initialization' }
 ChatModelMainWindow >> openUserConversation [
-    userConversationDialog ifNotNil: [ :dialog | dialog window ifNotNil: #close ].
-    userConversationDialog := self openTextDialog: 'Open User Conversation' initialText: self application userConversation onAccept: [ :text | self application userConversation: text ]
+
+	userConversationDialog ifNotNil: [ :dialog |
+		dialog window ifNotNil: #close ].
+	userConversationDialog := self
+		                          openTextDialog: 'Open User Conversation'
+		                          initialText:
+		                          self application userConversation
+		                          onAccept: [ :text |
+		                          self application userConversation: text ].
+	userConversationDialog title: 'Enter user conversation text'
 ]
 
 { #category : 'as yet unclassified' }
 ChatModelMainWindow >> sendConversationToModel: modelName [
     "Implement the logic to send the conversation to the selected model"
     self inform: 'Sending conversation to ', modelName.
+]
+
+{ #category : 'TOREMOVE' }
+ChatModelMainWindow >> title [ 
+
+ ^ 'Code generator'
 ]

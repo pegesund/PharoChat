@@ -10,9 +10,19 @@ Trait {
 	#tag : 'chat'
 }
 
-{ #category : 'private' }
-ChatBot >> sendToModel: content [
+{ #category : 'sending' }
+ChatBot >> sendContent: content user: user system: system model: model [
 
-Transcript crShow: content.
+	self subclassResponsibility
+]
 
+{ #category : 'accessing' }
+ChatBot >> url [
+
+	self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+ChatBot >> url: theUrl [
+  self subclassResponsibility 
 ]

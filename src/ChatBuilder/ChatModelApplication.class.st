@@ -15,53 +15,60 @@ Class {
 	#tag : 'UI'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'builder' }
 ChatModelApplication >> concatenateInfoForAPI [
-    | result methodInfo classInfo |
-    result := WriteStream on: String new.
-    
-    result 
-        nextPutAll: 'User Conversation: ';
-        nextPutAll: self userConversation;
-        cr; cr;
-        nextPutAll: 'System Conversation: ';
-        nextPutAll: self systemConversation;
-        cr; cr;
-        nextPutAll: 'Saved Methods:';
-        cr.
-    
-    methodInfo := OrderedCollection new.
-    classInfo := Set new.
-    
-    self savedMethods do: [ :method |
-        | class |
-        class := method methodClass.
-        methodInfo add: ('Method Name: ', method selector, String cr,
-                         'Method Type: ', (method isInstanceSide ifTrue: ['instance'] ifFalse: ['class']), String cr,
-                         'Source Code:', String cr, method sourceCode, String cr,
-                         'Class: ', class name, String cr, String cr).
-        classInfo add: class.
-    ].
-    
-    result nextPutAll: (String cr join: methodInfo).
-    
-    result nextPutAll: 'Class Definitions and Comments:'; cr.
-    classInfo do: [ :class |
-        result
-            nextPutAll: 'Class: ';
-            nextPutAll: class name;
-            cr;
-            nextPutAll: 'Definition:';
-            cr;
-            nextPutAll: class definition;
-            cr;
-            nextPutAll: 'Comment:';
-            cr;
-            nextPutAll: class comment;
-            cr; cr.
-    ].
-    
-    ^ result contents
+
+	| result methodInfo classInfo |
+	result := WriteStream on: String new.
+
+	result
+		nextPutAll: 'User Conversation: ';
+		nextPutAll: self userConversation;
+		cr;
+		cr;
+		nextPutAll: 'System Conversation: ';
+		nextPutAll: self systemConversation;
+		cr;
+		cr;
+		nextPutAll: 'Saved Methods:';
+		cr.
+
+	methodInfo := OrderedCollection new.
+	classInfo := Set new.
+
+	self savedMethods do: [ :method |
+		| class |
+		class := method methodClass.
+		methodInfo add:
+			'Method Name: ' , method selector , String cr , 'Method Type: '
+			, (method isClassSide
+					 ifTrue: [ 'class' ]
+					 ifFalse: [ 'instance' ]) , String cr , 'Source Code:'
+			, String cr , method sourceCode , String cr , 'Class: '
+			, class name , String cr , String cr.
+		classInfo add: class ].
+
+	result nextPutAll: (String cr join: methodInfo).
+
+	result
+		nextPutAll: 'Class Definitions and Comments:';
+		cr.
+	classInfo do: [ :class |
+		result
+			nextPutAll: 'Class: ';
+			nextPutAll: class name;
+			cr;
+			nextPutAll: 'Definition:';
+			cr;
+			nextPutAll: class definitionString;
+			cr;
+			nextPutAll: 'Comment:';
+			cr;
+			nextPutAll: class comment;
+			cr;
+			cr ].
+
+	^ result contents
 ]
 
 { #category : 'initialization' }

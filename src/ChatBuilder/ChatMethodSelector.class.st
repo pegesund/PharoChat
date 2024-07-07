@@ -170,7 +170,7 @@ ChatMethodSelector >> saveSelectedMethods [
     app := self application.
     app savedMethods: self selectedMethods.
     self inform: 'Selected methods saved.'.
-    self application inspect.
+    self application.
 ]
 
 { #category : 'as yet unclassified' }

@@ -31,6 +31,13 @@ ManifestChatBuilder class >> ruleCodeCruftLeftInMethodsRuleV1FalsePositive [
 ]
 
 { #category : 'code-critics' }
+ManifestChatBuilder class >> ruleCollectionProtocolRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#ChatModelApplication #concatenateInfoForAPI #false)) #'2024-07-07T10:34:10.489976+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestChatBuilder class >> ruleExcessiveArgumentsRuleV1FalsePositive [
 
 	<ignoreForCoverage>

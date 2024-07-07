@@ -17,58 +17,38 @@ Class {
 
 { #category : 'builder' }
 ChatModelApplication >> concatenateInfoForAPI [
-
-	| result methodInfo classInfo |
-	result := WriteStream on: String new.
-
-	result
-		nextPutAll: 'User Conversation: ';
-		nextPutAll: self userConversation;
-		cr;
-		cr;
-		nextPutAll: 'System Conversation: ';
-		nextPutAll: self systemConversation;
-		cr;
-		cr;
-		nextPutAll: 'Saved Methods:';
-		cr.
-
-	methodInfo := OrderedCollection new.
-	classInfo := Set new.
-
-	self savedMethods do: [ :method |
-		| class |
-		class := method methodClass.
-		methodInfo add:
-			'Method Name: ' , method selector , String cr , 'Method Type: '
-			, (method isClassSide
-					 ifTrue: [ 'class' ]
-					 ifFalse: [ 'instance' ]) , String cr , 'Source Code:'
-			, String cr , method sourceCode , String cr , 'Class: '
-			, class name , String cr , String cr.
-		classInfo add: class ].
-
-	result nextPutAll: (String cr join: methodInfo).
-
-	result
-		nextPutAll: 'Class Definitions and Comments:';
-		cr.
-	classInfo do: [ :class |
-		result
-			nextPutAll: 'Class: ';
-			nextPutAll: class name;
-			cr;
-			nextPutAll: 'Definition:';
-			cr;
-			nextPutAll: class definitionString;
-			cr;
-			nextPutAll: 'Comment:';
-			cr;
-			nextPutAll: class comment;
-			cr;
-			cr ].
-
-	^ result contents
+    | json methodsInfo classesInfo res |
+    
+    methodsInfo := self savedMethods collect: [ :method |
+        | class |
+        class := method methodClass.
+        {
+            'name' -> method selector.
+            'type' -> (method isClassSide ifTrue: ['class'] ifFalse: ['instance']).
+            'sourceCode' -> method sourceCode.
+            'class' -> class name
+        } asDictionary
+    ].
+    
+    classesInfo := (self savedMethods collect: [:method | method methodClass]) asSet collect: [ :class |
+        {
+            'name' -> class name.
+            'definition' -> class definitionString.
+            'comment' -> class comment
+        } asDictionary
+    ].
+    
+    json := {
+        'methods' -> methodsInfo asArray.
+        'classes' -> classesInfo asArray.
+        'userConversation' -> self userConversation.
+        'systemConversation' -> self systemConversation
+    } asDictionary.
+    res := STONJSON toStringPretty: json.
+    res inspect.
+   
+    
+    ^ res.
 ]
 
 { #category : 'initialization' }

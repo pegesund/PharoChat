@@ -17,38 +17,46 @@ Class {
 
 { #category : 'builder' }
 ChatModelApplication >> concatenateInfoForAPI [
-    | json methodsInfo classesInfo res |
-    
-    methodsInfo := self savedMethods collect: [ :method |
-        | class |
-        class := method methodClass.
-        {
-            'name' -> method selector.
-            'type' -> (method isClassSide ifTrue: ['class'] ifFalse: ['instance']).
-            'sourceCode' -> method sourceCode.
-            'class' -> class name
-        } asDictionary
-    ].
-    
-    classesInfo := (self savedMethods collect: [:method | method methodClass]) asSet collect: [ :class |
-        {
-            'name' -> class name.
-            'definition' -> class definitionString.
-            'comment' -> class comment
-        } asDictionary
-    ].
-    
-    json := {
-        'methods' -> methodsInfo asArray.
-        'classes' -> classesInfo asArray.
-        'userConversation' -> self userConversation.
-        'systemConversation' -> self systemConversation
-    } asDictionary.
-    res := STONJSON toStringPretty: json.
-    res inspect.
-   
-    
-    ^ res.
+
+	| json methodsInfo classesInfo res |
+	methodsInfo := self savedMethods collect: [ :method |
+		               | class methodType |
+		               class := method methodClass.
+		               methodType := method isClassSide
+			                             ifTrue: [ 'class' ]
+			                             ifFalse: [ 'instance' ].
+		               {
+			               ('sourceCode'
+			                -> (String streamContents: [ :stream |
+					                 stream
+						                 nextPutAll: (class name , ' >> #' , method selector);
+						                 cr;
+						                 nextPutAll: method sourceCode ])) }
+			               asDictionary ].
+
+	classesInfo := (self savedMethods collect: [ :method |
+		                method methodClass ]) asSet collect: [ :class |
+		               {
+			               ('name' -> class name).
+			               ('definition' -> class definitionString).
+			               ('comment' -> class comment) } asDictionary ].
+
+	json := {
+		        ('methods' -> methodsInfo asArray).
+		        ('classes' -> classesInfo asArray).
+		        ('userConversation' -> self userConversation).
+		        ('systemConversation' -> self systemConversation) }
+		        asDictionary.
+
+	res := STONJSON toStringPretty: json.
+
+	"Replace '\r' with newline and '\t' with tab"
+	res := res copyReplaceAll: '\r' with: String cr.
+	res := res copyReplaceAll: '\t' with: String tab.
+
+	res inspect.
+
+	^ res
 ]
 
 { #category : 'initialization' }

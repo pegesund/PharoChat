@@ -69,12 +69,13 @@ SendToModelDialog >> initializePresenters [
 			 height: 200;
 			 add: 'Select Model' expand: false;
 			 add: (modelSelector := self newDropList
-					                   items: #( 'chatgpt4' 'chatgpt3-turbo' );
+					                   items:
+						                   #( 'gpt-4o' 'gpt-3.5-turbo' 'gpt-4-turbo' );
 					                   selectIndex: 1)
 			 height: 30;
 			 add: (self newButton
 					  label: 'Send';
-					  action: [ self application concatenateInfoForAPI ])
+					  action: [ self application sendToChatModel: (modelSelector selectedItem) ])
 			 height: 40;
 			 yourself)
 ]

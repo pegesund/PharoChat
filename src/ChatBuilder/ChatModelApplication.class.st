@@ -100,9 +100,26 @@ ChatModelApplication >> savedMethods: aCollection [
 ]
 
 { #category : 'chat' }
-ChatModelApplication >> sendToChatModel: model [
+ChatModelApplication >> sendToChatModel: modelName [
 
-	
+	| model res userContent |
+	model := nil.
+	modelName = 'gpt-3.5-turbo' ifTrue: [ model := OpenAi new ].
+	modelName = 'gpt-4o' ifTrue: [ model := OpenAi new ].
+	modelName = 'gpt-4-turbo' ifTrue: [ model := OpenAi new ].
+
+	userContent := WriteStream on: String new.
+	userContent
+		nextPutAll: userConversation;
+		cr;
+		cr.
+	userContent nextPutAll: self concatenateInfoForAPI.
+
+	res := model
+		       sendModel: modelName
+		       user: userContent contents
+		       system: systemConversation.
+	res inspect
 ]
 
 { #category : 'accessing' }

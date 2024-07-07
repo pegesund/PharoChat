@@ -1,17 +1,21 @@
 "
 I am a class implementing the ChatBot trait on OpenAi
 "
-Trait {
+Class {
 	#name : 'OpenAi',
+	#superclass : 'Object',
+	#traits : 'ChatBot',
+	#classTraits : 'ChatBot classTrait',
 	#instVars : [
 		'url'
 	],
-	#category : 'ChatBuilder',
-	#package : 'ChatBuilder'
+	#category : 'ChatBuilder-chat',
+	#package : 'ChatBuilder',
+	#tag : 'chat'
 }
 
 { #category : 'chat' }
-OpenAi classSide >> simpleExample [
+OpenAi class >> simpleExample [
 
 	| client url entity response json jsonObject |
 	"Set up the WebClient"
@@ -74,7 +78,7 @@ OpenAi >> initialize [
 ]
 
 { #category : 'sending' }
-OpenAi >> sendModel: model user: user system: system [
+OpenAi >> sendModel: modelName user: user system: system [
 
 	| client urlZn entity response json jsonObject |
 	"Set up the WebClient"
@@ -86,11 +90,12 @@ OpenAi >> sendModel: model user: user system: system [
 	"Set up the headers"
 	client
 		headerAt: 'Content-Type' put: 'application/json';
-		headerAt: 'Authorization' put: 'Bearer ' , (ChatEnvironment getApiKey ).
+		headerAt: 'Authorization'
+		put: 'Bearer ' , ChatEnvironment getApiKey.
 
 	"Prepare the JSON payload"
 	json := STONJSON toString: {
-			        ('model' -> model).
+			        ('model' -> modelName).
 			        ('messages' -> {
 				         {
 					         ('role' -> 'system').
@@ -108,7 +113,7 @@ OpenAi >> sendModel: model user: user system: system [
 		            entity: entity;
 		            post.
 
-   jsonObject := nil.
+	jsonObject := nil.
 	"Check the response"
 	client isSuccess
 		ifTrue: [ "Process the successful response"
@@ -116,14 +121,13 @@ OpenAi >> sendModel: model user: user system: system [
 				show: 'Response: ' , response contents;
 				cr.
 			jsonObject := STONJSON fromString: response contents.
-			jsonObject inspect.
-			^ jsonObject ]
+			 ]
 		ifFalse: [ "Handle the error"
 			Transcript
 				show: 'Error: ' , response status asString;
 				cr ].
-			client close.
-			^ jsonObject .
+	client close.
+	^ jsonObject
 ]
 
 { #category : 'accessing' }

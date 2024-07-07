@@ -20,6 +20,12 @@ Class {
 	#tag : 'UI'
 }
 
+{ #category : 'as yet unclassified' }
+ChatMethodSelector class >> findAllProjects [
+
+	^ IceRepository registry collect: [:repo | repo name]
+]
+
 { #category : 'instance creation' }
 ChatMethodSelector class >> open [
     ^ self new open

@@ -42,9 +42,7 @@ ChatModelApplication >> concatenateInfoForAPI [
 
 	json := {
 		        ('methods' -> methodsInfo asArray).
-		        ('classes' -> classesInfo asArray).
-		        ('userConversation' -> self userConversation).
-		        ('systemConversation' -> self systemConversation) }
+		        ('classes' -> classesInfo asArray) }
 		        asDictionary.
 
 	res := STONJSON toStringPretty: json.
@@ -60,8 +58,35 @@ ChatModelApplication >> concatenateInfoForAPI [
 
 { #category : 'initialization' }
 ChatModelApplication >> initialize [
-    super initialize.
-    savedMethods := OrderedCollection new.
+
+	super initialize.
+	savedMethods := OrderedCollection new.
+	self systemConversation: '
+		You are a Smalltalk programmer using Pharo 12. Relevant code is added in the json naming both methods and relevant classes for the question. If question contains information about creating source, please answer with a json containing a field named methods. This field contains an array of all the methods to create or update. Each method should have a name field, a source field and a field named createOrUpdate describing if the code should be created or updated. One field should contain the field explanation on the main changes. Make sure the json follows this format, the data here is just randomly created.
+		
+		"source" = { 
+		   explanation = "Introduces two fixes on methods and one update. This changes make sure the http-request contains auth headers.. "
+			methods = [
+				{ "class" = "MyClass1,
+				  "name" = "verifyHttpHeaders",
+				  "source" = ^ headers..",
+				  "createOrUpdate" = "create"
+				 },
+				{ "class" = "MyClass2,
+				  "name" = "sendToAuthPage",
+				  "source" = ^ self redirect: authPage..",
+				  "createOrUpdate" = "update"
+				 },
+				...
+				  ]
+		 }
+		
+		If not asked to create code just answer like this:
+		
+		{ "result" = "here comes the content.." }
+		
+		
+	'
 ]
 
 { #category : 'accessing' }
@@ -75,9 +100,9 @@ ChatModelApplication >> savedMethods: aCollection [
 ]
 
 { #category : 'chat' }
-ChatModelApplication >> sendToChat [
-	"comment stating purpose of instance-side method"
+ChatModelApplication >> sendToChatModel: model [
 
+	
 ]
 
 { #category : 'accessing' }

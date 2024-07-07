@@ -1,3 +1,6 @@
+"
+I am a class implementing the ChatBot trait on OpenAi
+"
 Trait {
 	#name : 'OpenAi',
 	#instVars : [
@@ -64,15 +67,63 @@ OpenAi classSide >> simpleExample [
 	client close
 ]
 
-{ #category : 'as yet unclassified' }
-OpenAi classSide >> url [
-	^ self shouldBeImplemented
+{ #category : 'initialization' }
+OpenAi >> initialize [
+
+	self url: 'https://api.openai.com/v1/chat/completions'.
 ]
 
 { #category : 'sending' }
-OpenAi >> sendContent: content user: user system: system model: model [
+OpenAi >> sendModel: model user: user system: system [
 
-	Transcript show: 'hupp'
+	| client urlZn entity response json jsonObject |
+	"Set up the WebClient"
+	client := ZnClient new.
+
+	"Set the URL"
+	urlZn := 'https://api.openai.com/v1/chat/completions' asZnUrl.
+
+	"Set up the headers"
+	client
+		headerAt: 'Content-Type' put: 'application/json';
+		headerAt: 'Authorization' put: 'Bearer ' , (ChatEnvironment getApiKey ).
+
+	"Prepare the JSON payload"
+	json := STONJSON toString: {
+			        ('model' -> model).
+			        ('messages' -> {
+				         {
+					         ('role' -> 'system').
+					         ('content' -> system) } asDictionary.
+				         {
+					         ('role' -> 'user').
+					         ('content' -> user) } asDictionary }) } asDictionary.
+
+	"Set up the entity"
+	entity := ZnEntity with: json type: ZnMimeType applicationJson.
+
+	"Send the POST request"
+	response := client
+		            url: urlZn;
+		            entity: entity;
+		            post.
+
+   jsonObject := nil.
+	"Check the response"
+	client isSuccess
+		ifTrue: [ "Process the successful response"
+			Transcript
+				show: 'Response: ' , response contents;
+				cr.
+			jsonObject := STONJSON fromString: response contents.
+			jsonObject inspect.
+			^ jsonObject ]
+		ifFalse: [ "Handle the error"
+			Transcript
+				show: 'Error: ' , response status asString;
+				cr ].
+			client close.
+			^ jsonObject .
 ]
 
 { #category : 'accessing' }

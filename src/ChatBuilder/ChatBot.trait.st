@@ -11,7 +11,7 @@ Trait {
 }
 
 { #category : 'sending' }
-ChatBot >> sendContent: content user: user system: system model: model [
+ChatBot >> sendModel: model user: user system: system [
 
 	self subclassResponsibility
 ]

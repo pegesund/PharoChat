@@ -23,18 +23,6 @@ ChatEnvironment class >> setApiKey: key [
 	ApiKey := key
 ]
 
-{ #category : 'adding' }
-ChatEnvironment >> addOpenAIAPIKeyMenuItem [ 
-    (self registry detect: [:each | each name = 'Library']) 
-        ifNotNil: [:libraryMenu |
-            libraryMenu addItem: [ :item |
-                item
-                    name: 'Set OpenAI API Key';
-                    action: [self promptAndSetOpenAIAPIKey]
-            ]
-        ]
-]
-
 { #category : 'accessing' }
 ChatEnvironment >> commandName [
     ^ 'Set OpenAI API Key'

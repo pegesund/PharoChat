@@ -65,6 +65,15 @@ MultiCodePresenterWithToolbars >> loadEditor: anEditor [
 ]
 
 { #category : 'as yet unclassified' }
+MultiCodePresenterWithToolbars >> openWithSpec [
+
+	| window |
+	window := self open.
+	window extent: 1800 @ 1600.
+	^ window
+]
+
+{ #category : 'as yet unclassified' }
 MultiCodePresenterWithToolbars >> saveEditor: anEditor [
     "Implement save logic for the specific editor"
     self inform: 'Saving editor content: ', anEditor text
@@ -84,29 +93,24 @@ MultiCodePresenterWithToolbars >> textAt: index put: aString [
 MultiCodePresenterWithToolbars >> updateLayout [
     | mainLayout scrollableLayout |
     scrollableLayout := SpBoxLayout newTopToBottom
-        spacing: 2;  "Reduced overall spacing"
+        spacing: 10;  "Spacing between editor pairs"
         yourself.
     
-    codeEditorPairs doWithIndex: [ :pair :index |
+    codeEditorPairs do: [ :pair |
         scrollableLayout 
             add: (SpBoxLayout newTopToBottom
-                spacing: 0;  "No spacing between toolbar and editor"
-                add: pair first expand: false fill: false padding: 1;  "Minimal padding for toolbar"
-                add: pair second;
+                spacing: 2;
+                add: pair first expand: false;  "Toolbar"
+                add: pair second height: 150;  "Set a fixed height for the editor"
                 yourself).
-        
-        "Add a separator after each pair except the last one"
-        index < codeEditorPairs size ifTrue: [
-            scrollableLayout add: (self createSeparator) height: 1
-        ].
     ].
     
     mainLayout := SpBoxLayout newTopToBottom
-        spacing: 2;  "Reduced spacing"
+        spacing: 5;
         add: 'Code Editors' expand: false;
         add: (SpScrollableLayout new
             child: scrollableLayout;
-            yourself);
+            yourself) expand: true fill: true padding: 5;
         yourself.
     
     self layout: mainLayout.

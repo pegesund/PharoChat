@@ -13,8 +13,9 @@ Class {
 
 { #category : 'adding' }
 MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar [
-    | newEditor newToolbar pair |
+    | newEditor newToolbar pair statusLabel |
     newEditor := self instantiate: SpCodePresenter.
+    statusLabel := self newLabel label: 'Ready'.
     newToolbar := self newToolbar
         addItem: (SpToolbarButtonPresenter new
             label: '';
@@ -28,25 +29,27 @@ MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar [
             help: 'Load';
             action: [ self loadEditor: newEditor ];
             yourself);
+        addItem: (SpToolbarButtonPresenter new
+            label: 'Status:';
+            help: 'Status';
+            yourself);
+        addItem: (SpToolbarButtonPresenter new
+            label: 'Ready';
+            help: 'Current status';
+            yourself);
         yourself.
-    
-    pair := {newToolbar. newEditor}.
+    pair := {
+        newToolbar.
+        newEditor.
+        statusLabel }.
     codeEditorPairs add: pair.
-    self updateLayout.
+    self updateLayout
 ]
 
 { #category : 'accessing' }
 MultiCodePresenterWithToolbars >> codeEditorAt: index [
     ^ (codeEditorPairs at: index) second
 
-]
-
-{ #category : 'as yet unclassified' }
-MultiCodePresenterWithToolbars >> createSeparator [
-    ^ self newLabel
-        label: '';
-        color: Color green ;
-        yourself
 ]
 
 { #category : 'initialization' }
@@ -60,23 +63,35 @@ MultiCodePresenterWithToolbars >> initializePresenters [
 
 { #category : 'as yet unclassified' }
 MultiCodePresenterWithToolbars >> loadEditor: anEditor [
-    "Implement load logic for the specific editor"
-    self inform: 'Loading content for editor'
-]
-
-{ #category : 'as yet unclassified' }
-MultiCodePresenterWithToolbars >> openWithSpec [
-
-	| window |
-	window := self open.
-	window extent: 1800 @ 1600.
-	^ window
+    | index |
+    index := codeEditorPairs indexOf: (codeEditorPairs detect: [:pair | pair second == anEditor]) ifAbsent: [nil].
+    index ifNotNil: [
+        self updateStatusAt: index with: 'Loading...'.
+        "Implement load logic for the specific editor"
+        self inform: 'Loading content for editor'.
+        self updateStatusAt: index with: 'Loaded'
+    ] ifNil: [
+        self inform: 'Editor not found'
+    ]
 ]
 
 { #category : 'as yet unclassified' }
 MultiCodePresenterWithToolbars >> saveEditor: anEditor [
-    "Implement save logic for the specific editor"
-    self inform: 'Saving editor content: ', anEditor text
+    | index |
+    index := codeEditorPairs indexOf: (codeEditorPairs detect: [:pair | pair second == anEditor]) ifAbsent: [nil].
+    index ifNotNil: [
+        self updateStatusAt: index with: 'Saving...'.
+        "Implement save logic for the specific editor"
+        self inform: 'Saving editor content: ' , anEditor text.
+        self updateStatusAt: index with: 'Saved'
+    ] ifNil: [
+        self inform: 'Editor not found'
+    ]
+]
+
+{ #category : 'accessing' }
+MultiCodePresenterWithToolbars >> statusLabelAt: index [
+    ^ (codeEditorPairs at: index) third
 ]
 
 { #category : 'accessing' }
@@ -114,4 +129,11 @@ MultiCodePresenterWithToolbars >> updateLayout [
         yourself.
     
     self layout: mainLayout.
+]
+
+{ #category : 'accessing' }
+MultiCodePresenterWithToolbars >> updateStatusAt: index with: aString [
+    | toolbar |
+    toolbar := (codeEditorPairs at: index) first.
+    (toolbar items at: 4) label: aString
 ]

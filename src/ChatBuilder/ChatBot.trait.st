@@ -10,6 +10,24 @@ Trait {
 	#tag : 'chat'
 }
 
+{ #category : 'result handling' }
+ChatBot classSide >> extractDictFromJsonResult: jsonString [
+    | parsedJson source explanation methods classes |
+parsedJson := STON fromString: jsonString.
+    
+    source := parsedJson at: 'source'.
+    explanation := source at: 'explanation'.
+    methods := source at: 'methods'.
+    classes := source at: 'classes'.
+    
+    ^ Dictionary newFrom: {
+        #parsedJson -> parsedJson.
+        #explanation -> explanation.
+        #methods -> methods.
+        #classes -> classes
+    }
+]
+
 { #category : 'sending' }
 ChatBot >> sendModel: modelName user: user system: system [
 

@@ -5,9 +5,7 @@ Class {
 		'button',
 		'label',
 		'textModel',
-		'textMorph',
 		'toolbar',
-		'codeMode',
 		'scrolledText',
 		'codePresenter'
 	],

@@ -52,6 +52,12 @@ MultiCodePresenterWithToolbars >> codeEditorAt: index [
 
 ]
 
+{ #category : 'TOREMOVE' }
+MultiCodePresenterWithToolbars >> initialExtent [
+
+	^ 1000 @ 600
+]
+
 { #category : 'initialization' }
 MultiCodePresenterWithToolbars >> initializePresenters [
     super initializePresenters.

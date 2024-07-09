@@ -7,8 +7,9 @@ Class {
 	#instVars : [
 		'codeEditorPairs'
 	],
-	#category : 'ChatBuilder',
-	#package : 'ChatBuilder'
+	#category : 'ChatBuilder-UI',
+	#package : 'ChatBuilder',
+	#tag : 'UI'
 }
 
 { #category : 'adding' }
@@ -60,11 +61,11 @@ MultiCodePresenterWithToolbars >> initialExtent [
 
 { #category : 'initialization' }
 MultiCodePresenterWithToolbars >> initializePresenters [
-    super initializePresenters.
-    
-    codeEditorPairs := OrderedCollection new.
-    self addCodeEditorWithToolbar.
-    self addCodeEditorWithToolbar.
+
+	super initializePresenters.
+
+	codeEditorPairs := OrderedCollection new.
+	 
 ]
 
 { #category : 'as yet unclassified' }

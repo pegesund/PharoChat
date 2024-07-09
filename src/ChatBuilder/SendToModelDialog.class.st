@@ -8,8 +8,9 @@ Class {
 		'modelSelector',
 		'selectedMethods'
 	],
-	#category : 'ChatBuilder',
-	#package : 'ChatBuilder'
+	#category : 'ChatBuilder-UI',
+	#package : 'ChatBuilder',
+	#tag : 'UI'
 }
 
 { #category : 'as yet unclassified' }
@@ -75,7 +76,12 @@ SendToModelDialog >> initializePresenters [
 			 height: 30;
 			 add: (self newButton
 					  label: 'Send';
-					  action: [ self application sendToChatModel: (modelSelector selectedItem) ])
+					  action: [
+						  | codeAsJson |
+						  codeAsJson := self application sendToChatModel:
+								         modelSelector selectedItem.
+								self openCodeWindow: codeAsJson .
+								 ])
 			 height: 40;
 			 yourself)
 ]
@@ -86,4 +92,23 @@ SendToModelDialog >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 800 @ 900.
 
+]
+
+{ #category : 'codeUI' }
+SendToModelDialog >> openCodeWindow: codeAsJson [
+
+	| codePresenter win methods codeAsJsonDict |
+	codePresenter := MultiCodePresenterWithToolbars new.
+	codeAsJsonDict := codeAsJson isAssociation
+		                  ifTrue: [
+		                  { (codeAsJson key -> codeAsJson value) }
+			                  asDictionary ]
+		                  ifFalse: [ codeAsJson ].
+	methods := (codeAsJsonDict at: 'source') at: 'methods'.
+	methods doWithIndex: [ :each :index |
+		codePresenter addCodeEditorWithToolbar.
+		codePresenter textAt: index put: (each at: 'source') ].
+	win := codePresenter open.
+	win title: 'Suggested source code'.
+	^ #ok
 ]

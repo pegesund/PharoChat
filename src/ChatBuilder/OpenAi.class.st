@@ -75,12 +75,12 @@ OpenAi >> sendModel: modelName user: user system: system [
 		ifFalse: [
 			client close.
 			self error: response status asString ].
-
+	
 	content := STONJSON fromString: (self class removeFirstAndLastLines:
-		           (((jsonObject at: 'choices') first at: 'message') at:
-			            'content')).
-	^ content.
-
+			            (((jsonObject at: 'choices') first at: 'message') at:
+				             'content')).
+				
+	^ content
 ]
 
 { #category : 'accessing' }

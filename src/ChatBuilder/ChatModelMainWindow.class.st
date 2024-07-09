@@ -11,7 +11,6 @@ Class {
 		'sendConversationButton',
 		'userConversationDialog',
 		'systemConversationDialog',
-		'sendConversationDialog',
 		'chatMethodSelector'
 	],
 	#category : 'ChatBuilder-UI',
@@ -82,12 +81,6 @@ ChatModelMainWindow >> openClassSelector [
 { #category : 'as yet unclassified' }
 ChatModelMainWindow >> openSendConversationDialog [
     ^ SendToModelDialog openWithApplication: (self application)
-]
-
-{ #category : 'initialization' }
-ChatModelMainWindow >> openSendConversationDialog: modelSelector [ 
-
-	^ SendToModelDialog openWithApplication: self application
 ]
 
 { #category : 'initialization' }

@@ -8,8 +8,9 @@ Class {
 		'textInput',
 		'acceptAction'
 	],
-	#category : 'ChatBuilder',
-	#package : 'ChatBuilder'
+	#category : 'ChatBuilder-UI',
+	#package : 'ChatBuilder',
+	#tag : 'UI'
 }
 
 { #category : 'accessing' }

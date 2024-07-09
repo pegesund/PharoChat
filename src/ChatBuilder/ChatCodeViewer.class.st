@@ -1,3 +1,6 @@
+"
+I am the gui for the shown code blocks to accept or not.
+"
 Class {
 	#name : 'ChatCodeViewer',
 	#superclass : 'SpPresenter',
@@ -6,11 +9,11 @@ Class {
 		'label',
 		'textModel',
 		'toolbar',
-		'scrolledText',
 		'codePresenter'
 	],
-	#category : 'ChatBuilder',
-	#package : 'ChatBuilder'
+	#category : 'ChatBuilder-UI',
+	#package : 'ChatBuilder',
+	#tag : 'UI'
 }
 
 { #category : 'initialization' }

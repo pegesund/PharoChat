@@ -72,7 +72,9 @@ MultiCodePresenterWithToolbars >> initializePresenters [
 		                     text: 'Your large text block goes here...';
 		                     beNotEditable;
 		                     yourself.
-		
+
+	
+   
 ]
 
 { #category : 'as yet unclassified' }
@@ -140,7 +142,7 @@ MultiCodePresenterWithToolbars >> updateLayout [
 				 "Set a fixed height for the editor"yourself) ].
 
 	mainLayout := SpBoxLayout newTopToBottom
-		              add: (SpScrollableLayout with: explanationEditor ) expand: true fill: true;
+		              add: (SpScrollableLayout with: explanationEditor) height: 150;
 		              add: 'Code Editors' expand: false;
 		              add: (SpScrollableLayout new
 				               child: scrollableLayout;

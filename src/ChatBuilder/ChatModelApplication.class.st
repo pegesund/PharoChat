@@ -77,6 +77,16 @@ ChatModelApplication >> initialize [
 		
 		Important: Always have source as top tag when writing source. Never, never have source without methods and classes fields. 
 		
+When generating methods, please include class name in the method source, like in this method declaration example: 
+
+Utilities class >> hasDuplicatesIn: aCollection
+
+If not a class method it should look like this:
+
+Utilities  >> hasDuplicatesIn: aCollection
+
+Correct json on result is like this:
+		
 		"source" = { 
 		   explanation = "Introduces two fixes on methods and one update. This changes make sure the http-request contains auth headers.. "
 			methods = [
@@ -98,6 +108,7 @@ ChatModelApplication >> initialize [
 				{ "class" = "TheClassName",
 				  "comment" = "I am a class which.."
 				  "souce" = "Object << #MyClass
+				                                             "Put class comment here too.."
 									layout: FixedLayout;
 									traits: {};
 									slots: {};
@@ -110,10 +121,21 @@ ChatModelApplication >> initialize [
 				 ]
 		 }
 		
+While creating/updating a class it should be on this form:
+
+Object << #MyClass
+        "Add comment here also.."
+	layout: FixedLayout;
+	traits: {};
+	slots: {};
+	sharedVariables: {};
+	sharedPools: {};
+	tag: '''' ;
+	package: ''ChatBuilder''		
+		
 		If not asked to create code just answer like this:
 		
 		{ "result" = "here comes the content.." }
-		
 		
 	'
 ]

@@ -97,13 +97,24 @@ SendToModelDialog >> initializeWindow: aWindowPresenter [
 { #category : 'codeUI' }
 SendToModelDialog >> openCodeWindow: codeAsJson [
 
-	| codePresenter win methods |
+	| codePresenter win methods theClasses i |
 	codePresenter := MultiCodePresenterWithToolbars new.
-	codePresenter setExplanationText: ((codeAsJson at: 'source') at: 'explanation').
-	methods := (codeAsJson at: 'source') at: 'methods'.
-	methods doWithIndex: [ :each :index |
+	codePresenter setExplanationText:
+		((codeAsJson at: 'source') at: 'explanation').
+
+   i := 0.		
+	theClasses := (codeAsJson at: 'source') at: 'classes'.
+	theClasses do: [ :each |
+		i := i + 1.
 		codePresenter addCodeEditorWithToolbar.
-		codePresenter textAt: index put: (each at: 'source') ].
+		codePresenter textAt: i put: (each at: 'source').
+		 ].
+
+	methods := (codeAsJson at: 'source') at: 'methods'.
+	methods do: [ :each |
+		i := i + 1.
+		codePresenter addCodeEditorWithToolbar.
+		codePresenter textAt: i put: (each at: 'source') ].
 	win := codePresenter open.
 	win title: 'Suggested source code'.
 	^ #ok

@@ -97,14 +97,9 @@ SendToModelDialog >> initializeWindow: aWindowPresenter [
 { #category : 'codeUI' }
 SendToModelDialog >> openCodeWindow: codeAsJson [
 
-	| codePresenter win methods codeAsJsonDict |
+	| codePresenter win methods |
 	codePresenter := MultiCodePresenterWithToolbars new.
-	codeAsJsonDict := codeAsJson isAssociation
-		                  ifTrue: [
-		                  { (codeAsJson key -> codeAsJson value) }
-			                  asDictionary ]
-		                  ifFalse: [ codeAsJson ].
-	methods := (codeAsJsonDict at: 'source') at: 'methods'.
+	methods := (codeAsJson at: 'source') at: 'methods'.
 	methods doWithIndex: [ :each :index |
 		codePresenter addCodeEditorWithToolbar.
 		codePresenter textAt: index put: (each at: 'source') ].

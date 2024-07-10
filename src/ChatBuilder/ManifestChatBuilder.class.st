@@ -34,7 +34,7 @@ ManifestChatBuilder class >> ruleCodeCruftLeftInMethodsRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleCollectionProtocolRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#ChatModelApplication #concatenateInfoForAPI #false)) #'2024-07-07T10:34:10.489976+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ChatModelApplication #concatenateInfoForAPI #false)) #'2024-07-07T10:34:10.489976+02:00') #(#(#RGMethodDefinition #(#MultiCodePresenterWithToolbars #updateLayout #false)) #'2024-07-10T11:37:34.889695+02:00') )
 ]
 
 { #category : 'code-critics' }

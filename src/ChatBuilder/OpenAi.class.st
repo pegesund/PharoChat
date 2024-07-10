@@ -79,13 +79,11 @@ OpenAi >> sendModel: modelName user: user system: system [
 	content := STONJSON fromString: (self class removeFirstAndLastLines:
 			            (((jsonObject at: 'choices') first at: 'message') at:
 				             'content')).
-				
-	content isAssociation
-		                  ifTrue: [
-		                  ^ { (content key -> content value) }
-			                  asDictionary ]
-		                  ifFalse: [ ^ content ].
 
+   "Sometimes root brackets are missing in answer.."
+	content isAssociation
+		ifTrue: [ ^ { (content key -> content value) } asDictionary ]
+		ifFalse: [ ^ content ]
 ]
 
 { #category : 'accessing' }

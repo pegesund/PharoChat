@@ -5,6 +5,7 @@ Class {
 	#name : 'MultiCodePresenterWithToolbars',
 	#superclass : 'SpPresenter',
 	#instVars : [
+		'explanationEditor',
 		'codeEditorPairs'
 	],
 	#category : 'ChatBuilder-UI',
@@ -14,37 +15,38 @@ Class {
 
 { #category : 'adding' }
 MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar [
-    | newEditor newToolbar pair statusLabel |
-    newEditor := self instantiate: SpCodePresenter.
-    statusLabel := self newLabel label: 'Ready'.
-    newToolbar := self newToolbar
-        addItem: (SpToolbarButtonPresenter new
-            label: '';
-            icon: (self iconNamed: #smallSave);
-            help: 'Save';
-            action: [ self saveEditor: newEditor ];
-            yourself);
-        addItem: (SpToolbarButtonPresenter new
-            label: '';
-            icon: (self iconNamed: #openIcon);
-            help: 'Load';
-            action: [ self loadEditor: newEditor ];
-            yourself);
-        addItem: (SpToolbarButtonPresenter new
-            label: 'Status:';
-            help: 'Status';
-            yourself);
-        addItem: (SpToolbarButtonPresenter new
-            label: 'Ready';
-            help: 'Current status';
-            yourself);
-        yourself.
-    pair := {
-        newToolbar.
-        newEditor.
-        statusLabel }.
-    codeEditorPairs add: pair.
-    self updateLayout
+
+	| newEditor newToolbar pair statusLabel |
+	newEditor := self instantiate: SpCodePresenter.
+	statusLabel := self newLabel label: 'Ready'.
+	newToolbar := self newToolbar
+		              addItem: (SpToolbarButtonPresenter new
+				               label: '';
+				               icon: (self iconNamed: #smallSave);
+				               help: 'Save';
+				               action: [ self saveEditor: newEditor ];
+				               yourself);
+		              addItem: (SpToolbarButtonPresenter new
+				               label: '';
+				               icon: (self iconNamed: #openIcon);
+				               help: 'Load';
+				               action: [ self loadEditor: newEditor ];
+				               yourself);
+		              addItem: (SpToolbarButtonPresenter new
+				               label: 'Status:';
+				               help: 'Status';
+				               yourself);
+		              addItem: (SpToolbarButtonPresenter new
+				               label: 'Ready';
+				               help: 'Current status';
+				               yourself);
+		              yourself.
+	pair := {
+		        newToolbar.
+		        newEditor.
+		        statusLabel }.
+	codeEditorPairs add: pair.
+	self updateLayout
 ]
 
 { #category : 'accessing' }
@@ -65,7 +67,12 @@ MultiCodePresenterWithToolbars >> initializePresenters [
 	super initializePresenters.
 
 	codeEditorPairs := OrderedCollection new.
-	 
+
+	explanationEditor := SpTextPresenter new
+		                     text: 'Your large text block goes here...';
+		                     beNotEditable;
+		                     yourself.
+		
 ]
 
 { #category : 'as yet unclassified' }
@@ -113,29 +120,31 @@ MultiCodePresenterWithToolbars >> textAt: index put: aString [
 
 { #category : 'private' }
 MultiCodePresenterWithToolbars >> updateLayout [
-    | mainLayout scrollableLayout |
-    scrollableLayout := SpBoxLayout newTopToBottom
-        spacing: 10;  "Spacing between editor pairs"
-        yourself.
-    
-    codeEditorPairs do: [ :pair |
-        scrollableLayout 
-            add: (SpBoxLayout newTopToBottom
-                spacing: 2;
-                add: pair first expand: false;  "Toolbar"
-                add: pair second height: 150;  "Set a fixed height for the editor"
-                yourself).
-    ].
-    
-    mainLayout := SpBoxLayout newTopToBottom
-        spacing: 5;
-        add: 'Code Editors' expand: false;
-        add: (SpScrollableLayout new
-            child: scrollableLayout;
-            yourself) expand: true fill: true padding: 5;
-        yourself.
-    
-    self layout: mainLayout.
+
+	| mainLayout scrollableLayout |
+	scrollableLayout := SpBoxLayout newTopToBottom
+		                    spacing: 10;
+		                    "Spacing between editor pairs"yourself.
+
+	codeEditorPairs do: [ :pair |
+		scrollableLayout add: (SpBoxLayout newTopToBottom
+				 spacing: 2;
+				 add: pair first expand: false;
+				 "Toolbar"add: pair second height: 150;
+				 "Set a fixed height for the editor"yourself) ].
+
+	mainLayout := SpBoxLayout newTopToBottom
+		              add: (SpScrollableLayout with: explanationEditor ) expand: true fill: true;
+		              add: 'Code Editors' expand: false;
+		              add: (SpScrollableLayout new
+				               child: scrollableLayout;
+				               yourself)
+		              expand: true
+		              fill: true
+		              padding: 5;
+		              yourself.
+
+	self layout: mainLayout
 ]
 
 { #category : 'accessing' }

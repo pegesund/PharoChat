@@ -73,6 +73,7 @@ ChatModelApplication >> initialize [
 	super initialize.
 	savedMethods := OrderedCollection new.
 	self systemConversation: '
+		
 		You are a Smalltalk programmer using Pharo 12. Relevant code is added in the json naming both methods and relevant classes for the question. If question contains information about creating source, please answer with a json containing a field named methods. This field contains an array of all the methods to create or update. Each method should have a name field, a source field and a field named createOrUpdate describing if the code should be created or updated. One field should contain the field explanation on the main changes. Make sure the json follows this format, the data here is just randomly created. Make sure the field "source" is the top tag if the answer contains code, this is important. If the answer suggests new classes/updated to classes this is to be found in the class tag. Make sure class source code is in the new format like, described in the example below. If the answer contains code it should always contain an explantation on what is done. Make sure to comment methods and classes. Make sure the answer contains only the json content, no loose text before or after the generated json.  Do not generate an explanation field without adding methods and/or classes.
 		
 		Important: Always have source as top tag when writing source. Never, never have source without methods and classes fields. 
@@ -84,6 +85,8 @@ Utilities class >> hasDuplicatesIn: aCollection
 If not a class method it should look like this:
 
 Utilities  >> hasDuplicatesIn: aCollection
+
+When creating/updating classes make sure to include slots (variables) used in new methods or method updates.
 
 Correct json on result is like this:
 		
@@ -137,6 +140,8 @@ Object << #MyClass
 		
 		{ "result" = "here comes the content.." }
 		
+		
+	
 	'
 ]
 

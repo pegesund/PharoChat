@@ -99,6 +99,7 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 
 	| codePresenter win methods |
 	codePresenter := MultiCodePresenterWithToolbars new.
+	codePresenter setExplanationText: ((codeAsJson at: 'source') at: 'explanation').
 	methods := (codeAsJson at: 'source') at: 'methods'.
 	methods doWithIndex: [ :each :index |
 		codePresenter addCodeEditorWithToolbar.

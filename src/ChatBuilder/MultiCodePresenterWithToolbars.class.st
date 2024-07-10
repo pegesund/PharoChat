@@ -103,6 +103,12 @@ MultiCodePresenterWithToolbars >> saveEditor: anEditor [
     ]
 ]
 
+{ #category : 'initialization' }
+MultiCodePresenterWithToolbars >> setExplanationText: text [
+
+explanationEditor text: text.
+]
+
 { #category : 'accessing' }
 MultiCodePresenterWithToolbars >> statusLabelAt: index [
     ^ (codeEditorPairs at: index) third

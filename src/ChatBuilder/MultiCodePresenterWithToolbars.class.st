@@ -14,34 +14,42 @@ Class {
 }
 
 { #category : 'adding' }
-MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar [
+MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar: isUpdate [
 
 	| newEditor newToolbar pair statusLabel |
 	newEditor := self instantiate: SpCodePresenter.
-	newEditor beForScripting .
+	newEditor beForScripting.
 	statusLabel := self newLabel label: 'Ready'.
 	newToolbar := self newToolbar
 		              addItem: (SpToolbarButtonPresenter new
-				               label: '';
+				               label: 'Compile';
 				               icon: (self iconNamed: #smallSave);
-				               help: 'Save';
+				               help: 'Compile';
 				               action: [ self saveEditor: newEditor ];
 				               yourself);
 		              addItem: (SpToolbarButtonPresenter new
-				               label: '';
+				               label: 'Open';
 				               icon: (self iconNamed: #openIcon);
-				               help: 'Load';
+				               help: 'Open';
 				               action: [ self loadEditor: newEditor ];
-				               yourself);
-		              addItem: (SpToolbarButtonPresenter new
-				               label: 'Status:';
-				               help: 'Status';
-				               yourself);
-		              addItem: (SpToolbarButtonPresenter new
-				               label: 'Ready';
-				               help: 'Current status';
-				               yourself);
-		              yourself.
+				               yourself).
+
+	isUpdate ifTrue: [
+		newToolbar addItem: (SpToolbarButtonPresenter new
+				 label: 'Diff';
+				 icon: (self iconNamed: #openIcon);
+				 help: 'Diff';
+				 action: [  ];
+				 yourself) ].
+	newToolbar
+		addItem: (SpToolbarButtonPresenter new
+				 label: 'Status:';
+				 help: 'Status';
+				 yourself);
+		addItem: (SpToolbarButtonPresenter new
+				 label: 'Ready';
+				 help: 'Current status';
+				 yourself).
 	pair := {
 		        newToolbar.
 		        newEditor.
@@ -72,10 +80,7 @@ MultiCodePresenterWithToolbars >> initializePresenters [
 	explanationEditor := SpTextPresenter new
 		                     text: 'Your large text block goes here...';
 		                     beNotEditable;
-		                     yourself.
-
-	
-   
+		                     yourself
 ]
 
 { #category : 'as yet unclassified' }

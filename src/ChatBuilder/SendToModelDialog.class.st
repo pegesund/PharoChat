@@ -102,18 +102,19 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 	codePresenter setExplanationText:
 		((codeAsJson at: 'source') at: 'explanation').
 
-   i := 0.		
+	i := 0.
 	theClasses := (codeAsJson at: 'source') at: 'classes'.
 	theClasses do: [ :each |
 		i := i + 1.
-		codePresenter addCodeEditorWithToolbar.
-		codePresenter textAt: i put: (each at: 'source').
-		 ].
+		codePresenter addCodeEditorWithToolbar:
+			(each at: 'createOrUpdate') = 'update'.
+		codePresenter textAt: i put: (each at: 'source') ].
 
 	methods := (codeAsJson at: 'source') at: 'methods'.
 	methods do: [ :each |
 		i := i + 1.
-		codePresenter addCodeEditorWithToolbar.
+		codePresenter addCodeEditorWithToolbar:
+			(each at: 'createOrUpdate') = 'update'.
 		codePresenter textAt: i put: (each at: 'source') ].
 	win := codePresenter open.
 	win title: 'Suggested source code'.

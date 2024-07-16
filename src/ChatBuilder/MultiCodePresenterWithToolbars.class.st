@@ -18,6 +18,7 @@ MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar [
 
 	| newEditor newToolbar pair statusLabel |
 	newEditor := self instantiate: SpCodePresenter.
+	newEditor beForScripting .
 	statusLabel := self newLabel label: 'Ready'.
 	newToolbar := self newToolbar
 		              addItem: (SpToolbarButtonPresenter new
@@ -128,31 +129,28 @@ MultiCodePresenterWithToolbars >> textAt: index put: aString [
 
 { #category : 'private' }
 MultiCodePresenterWithToolbars >> updateLayout [
-
-	| mainLayout scrollableLayout |
-	scrollableLayout := SpBoxLayout newTopToBottom
-		                    spacing: 10;
-		                    "Spacing between editor pairs"yourself.
-
-	codeEditorPairs do: [ :pair |
-		scrollableLayout add: (SpBoxLayout newTopToBottom
-				 spacing: 2;
-				 add: pair first expand: false;
-				 "Toolbar"add: pair second height: 150;
-				 "Set a fixed height for the editor"yourself) ].
-
-	mainLayout := SpBoxLayout newTopToBottom
-		              add: (SpScrollableLayout with: explanationEditor) height: 150;
-		              add: 'Code Editors' expand: false;
-		              add: (SpScrollableLayout new
-				               child: scrollableLayout;
-				               yourself)
-		              expand: true
-		              fill: true
-		              padding: 5;
-		              yourself.
-
-	self layout: mainLayout
+    | mainLayout codeEditorsLayout contentLayout |
+    codeEditorsLayout := SpBoxLayout newTopToBottom
+        spacing: 0;
+        yourself.
+    codeEditorPairs do: [ :pair |
+        codeEditorsLayout add: (SpBoxLayout newTopToBottom
+            spacing: 0;
+            add: pair first expand: false;
+            add: pair second height: 150 
+            yourself) ].
+    
+    contentLayout := SpBoxLayout newTopToBottom
+        add: (SpScrollableLayout with: explanationEditor) height: 100;
+        add: 'Code Editors' expand: false;
+        add: codeEditorsLayout expand: true;
+        yourself.
+    
+    mainLayout := SpScrollableLayout new
+        child: contentLayout;
+        yourself.
+    
+    self layout: mainLayout
 ]
 
 { #category : 'accessing' }

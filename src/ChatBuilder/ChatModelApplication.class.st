@@ -114,7 +114,7 @@ Correct json on result is like this:
 				                                             "Put class comment here too.."
 									layout: FixedLayout;
 									traits: {};
-									slots: {};
+									slots: { #myslot . #anotherSlot};
 									sharedVariables: {};
 									sharedPools: {};
 									tag: '''' ;
@@ -130,7 +130,7 @@ Object << #MyClass
         "Add comment here also.."
 	layout: FixedLayout;
 	traits: {};
-	slots: {};
+	slots: { #myVar1 . #myVar2 };
 	sharedVariables: {};
 	sharedPools: {};
 	tag: '''' ;

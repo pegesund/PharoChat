@@ -18,6 +18,47 @@ Class {
 	#tag : 'UI'
 }
 
+{ #category : 'gui' }
+ChatModelMainWindow class >> chatShowErrorMsg: msg [
+
+| presenter window |
+
+window := nil.
+
+"Create a new subclass of SpPresenter"
+presenter := SpPresenter new
+    layout: (SpBoxLayout newTopToBottom
+        spacing: 10;
+        add: (SpMorphPresenter new
+            morph: (Morph new
+                color: (Color r: 1 g: 0.9 b: 0.9);
+                addMorph: (StringMorph new
+                    contents: msg;
+                    yourself) asMorph;
+                layoutPolicy: TableLayout new;
+                listDirection: #center;
+                listCentering: #center;
+                vResizing: #spaceFill;
+                hResizing: #spaceFill;
+                yourself);
+            yourself);
+        add: (SpButtonPresenter new
+            label: 'Close';
+            action: [ window close ];
+            yourself) expand: false;
+        yourself);
+    yourself.
+
+"Create a new window and set its content"
+window := presenter open.
+
+"Set window properties"
+window
+    title: 'Errors in code';
+    initialExtent: 250@120;
+    centered.
+]
+
 { #category : 'instance creation' }
 ChatModelMainWindow class >> open [
     | app window |

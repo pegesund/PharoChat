@@ -50,6 +50,7 @@ MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar: isUpdate [
 				 label: 'Ready';
 				 help: 'Current status';
 				 yourself).
+						
 	pair := {
 		        newToolbar.
 		        newEditor.

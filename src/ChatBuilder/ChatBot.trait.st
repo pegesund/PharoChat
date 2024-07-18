@@ -1,7 +1,13 @@
 "
 Chatbot trait
 
-So far only OpenAi implements this but it should be easy to extend.
+So far only OpenAi implements this but it should be easy to extend. Extend this object if you would like to support other chatbots.
+
+Also contains some class helper methods which are common. Like compile, use like this to compile a method:
+
+
+ChatBot compileMethod: 'Integer' source: 'triple\\n\\t^ self * 3' isClassSide: false
+
 "
 Trait {
 	#name : 'ChatBot',
@@ -9,6 +15,24 @@ Trait {
 	#package : 'ChatBuilder',
 	#tag : 'chat'
 }
+
+{ #category : 'compiling' }
+ChatBot classSide >> compileMethod: className source: methodSource isClassSide: isClassSide [
+    | targetClass processedSource |
+    
+    processedSource := methodSource copyReplaceAll: '\n' with: String cr.
+    processedSource := processedSource copyReplaceAll: '\t' with: String tab.
+    
+    ^ [
+        targetClass := Smalltalk at: className asSymbol.
+        isClassSide ifTrue: [ targetClass := targetClass class ].
+        
+        targetClass compile: processedSource.
+        #ok
+    ] on: Error do: [ :error |
+        error messageText
+    ]
+]
 
 { #category : 'result handling' }
 ChatBot classSide >> extractDictFromJsonResult: jsonString [
@@ -26,6 +50,36 @@ parsedJson := STON fromString: jsonString.
         #methods -> methods.
         #classes -> classes
     }
+]
+
+{ #category : 'compiling' }
+ChatBot classSide >> extractMethodInfo: inputString [
+"Extract class, signature and source from a method as a string"
+	| parts className methodType signature source dict |
+	dict := Dictionary new.
+
+	"Split the input string into parts"
+	parts := inputString trimBoth splitOn: '>>'.
+
+	"Extract class name and check for class method"
+	className := parts first trimBoth.
+	methodType := 'instance'.
+	(className endsWith: ' class') ifTrue: [
+		className := className allButLast: 6.
+		methodType := 'class' ].
+
+	dict at: 'className' put: className.
+	dict at: 'methodType' put: methodType.
+
+	"Extract method signature and source"
+	parts := parts second trimBoth splitOn: '['.
+	signature := parts first trimBoth.
+	source := '[' , (parts allButFirst joinUsing: '[').
+
+	dict at: 'signature' put: signature.
+	dict at: 'source' put: source trimBoth.
+
+	^ dict
 ]
 
 { #category : 'sending' }

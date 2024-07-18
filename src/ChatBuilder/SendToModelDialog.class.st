@@ -76,12 +76,11 @@ SendToModelDialog >> initializePresenters [
 			 height: 30;
 			 add: (self newButton
 					  label: 'Send';
-					  action: [
+					  action: [ 
 						  | codeAsJson |
 						  codeAsJson := self application sendToChatModel:
-								         modelSelector selectedItem.
-								self openCodeWindow: codeAsJson .
-								 ])
+								                modelSelector selectedItem.
+						  self openCodeWindow: codeAsJson ])
 			 height: 40;
 			 yourself)
 ]
@@ -98,6 +97,7 @@ SendToModelDialog >> initializeWindow: aWindowPresenter [
 SendToModelDialog >> openCodeWindow: codeAsJson [
 
 	| codePresenter win methods theClasses i |
+	(codeAsJson = #done) ifTrue: [ ^ #done ].
 	codePresenter := MultiCodePresenterWithToolbars new.
 	codePresenter setExplanationText:
 		((codeAsJson at: 'source') at: 'explanation').

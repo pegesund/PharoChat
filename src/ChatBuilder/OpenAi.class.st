@@ -39,6 +39,11 @@ OpenAi >> sendModel: modelName user: user system: system [
 
 	"Set the URL"
 	urlZn := 'https://api.openai.com/v1/chat/completions' asZnUrl.
+	
+	(ChatEnvironment getApiKey isString) ifFalse: [ 
+		ChatModelMainWindow chatShowErrorMsg: 'Api code not found'.
+		^ #done
+		 ].  
 
 	"Set up the headers"
 	client

@@ -2,7 +2,7 @@
 Main window for gui
 "
 Class {
-	#name : 'ChatModelApplication',
+	#name : 'ChatApplication',
 	#superclass : 'SpApplication',
 	#instVars : [
 		'userConversation',
@@ -16,19 +16,19 @@ Class {
 }
 
 { #category : 'accessing' }
-ChatModelApplication >> apiContent [
+ChatApplication >> apiContent [
 
 	^ apiContent
 ]
 
 { #category : 'accessing' }
-ChatModelApplication >> apiContent: anObject [
+ChatApplication >> apiContent: anObject [
 
 	apiContent := anObject
 ]
 
 { #category : 'builder' }
-ChatModelApplication >> concatenateInfoForAPI [
+ChatApplication >> concatenateInfoForAPI [
 
 	| json methodsInfo classesInfo res |
 	methodsInfo := self savedMethods collect: [ :method |
@@ -68,7 +68,7 @@ ChatModelApplication >> concatenateInfoForAPI [
 ]
 
 { #category : 'initialization' }
-ChatModelApplication >> initialize [
+ChatApplication >> initialize [
 
 	super initialize.
 	savedMethods := OrderedCollection new.
@@ -146,17 +146,17 @@ Object << #MyClass
 ]
 
 { #category : 'accessing' }
-ChatModelApplication >> savedMethods [
+ChatApplication >> savedMethods [
     ^ savedMethods
 ]
 
 { #category : 'accessing' }
-ChatModelApplication >> savedMethods: aCollection [
+ChatApplication >> savedMethods: aCollection [
     savedMethods := aCollection asOrderedCollection
 ]
 
 { #category : 'chat' }
-ChatModelApplication >> sendToChatModel: modelName [
+ChatApplication >> sendToChatModel: modelName [
 
 	| model res userContent |
 	model := nil.
@@ -180,21 +180,21 @@ ChatModelApplication >> sendToChatModel: modelName [
 ]
 
 { #category : 'accessing' }
-ChatModelApplication >> systemConversation [
+ChatApplication >> systemConversation [
     ^ systemConversation
 ]
 
 { #category : 'accessing' }
-ChatModelApplication >> systemConversation: aString [
+ChatApplication >> systemConversation: aString [
     systemConversation := aString
 ]
 
 { #category : 'accessing' }
-ChatModelApplication >> userConversation [
+ChatApplication >> userConversation [
     ^ userConversation
 ]
 
 { #category : 'accessing' }
-ChatModelApplication >> userConversation: aString [
+ChatApplication >> userConversation: aString [
     userConversation := aString
 ]

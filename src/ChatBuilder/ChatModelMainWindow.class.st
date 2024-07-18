@@ -62,7 +62,7 @@ window
 { #category : 'instance creation' }
 ChatModelMainWindow class >> open [
     | app window |
-    app := ChatModelApplication new.
+    app := ChatApplication new.
     window := self new.
     window application: app.
     ^ window open

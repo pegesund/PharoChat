@@ -17,7 +17,7 @@ Trait {
 }
 
 { #category : 'compiling' }
-ChatBot classSide >> compileMethod: className source: methodSource isClassSide: isClassSide [
+ChatBot classSide >> chatCompileMethod: className source: methodSource isClassSide: isClassSide [
     | targetClass processedSource |
     
     processedSource := methodSource copyReplaceAll: '\n' with: String cr.
@@ -34,27 +34,51 @@ ChatBot classSide >> compileMethod: className source: methodSource isClassSide: 
     ]
 ]
 
-{ #category : 'result handling' }
-ChatBot classSide >> extractDictFromJsonResult: jsonString [
-    | parsedJson source explanation methods classes |
-parsedJson := STON fromString: jsonString.
-    
-    source := parsedJson at: 'source'.
-    explanation := source at: 'explanation'.
-    methods := source at: 'methods'.
-    classes := source at: 'classes'.
-    
-    ^ Dictionary newFrom: {
-        #parsedJson -> parsedJson.
-        #explanation -> explanation.
-        #methods -> methods.
-        #classes -> classes
-    }
+{ #category : 'as yet unclassified' }
+ChatBot classSide >> chatCompileMethodFromString: str [
+	"comment stating purpose of class-side method"
+
 ]
 
 { #category : 'compiling' }
-ChatBot classSide >> extractMethodInfo: inputString [
-"Extract class, signature and source from a method as a string"
+ChatBot classSide >> chatCompileString: str [
+	(self chatDetectIfClassOrMethod: str) ifTrue: [ "object"
+		
+		 ] ifFalse: [ "method"
+		
+		 ]
+]
+
+{ #category : 'compiling' }
+ChatBot classSide >> chatDetectIfClassOrMethod: str [
+	"check if string contains definition on a class or method"
+	^ (str lines first) includes: '<<'.
+
+	
+]
+
+{ #category : 'result handling' }
+ChatBot classSide >> chatExtractDictFromJsonResult: jsonString [
+	"Extract data returned from the llm"
+	| parsedJson source explanation methods classes |
+	parsedJson := STON fromString: jsonString.
+
+	source := parsedJson at: 'source'.
+	explanation := source at: 'explanation'.
+	methods := source at: 'methods'.
+	classes := source at: 'classes'.
+
+	^ Dictionary newFrom: {
+			  (#parsedJson -> parsedJson).
+			  (#explanation -> explanation).
+			  (#methods -> methods).
+			  (#classes -> classes) }
+]
+
+{ #category : 'compiling' }
+ChatBot classSide >> chatExtractMethodInfo: inputString [
+	"Extract class, signature, methodtype and source from a method as a string"
+
 	| parts className methodType signature source dict |
 	dict := Dictionary new.
 

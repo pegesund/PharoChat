@@ -16,6 +16,35 @@ Trait {
 	#tag : 'chat'
 }
 
+{ #category : 'tests' }
+ChatBot classSide >> chatCompileClass: sourceCode comment: comment [
+	"compiles a string a class"
+	| builder newClass targetPackage className ast |
+	ast := CDFluidClassDefinitionParser parse: sourceCode.
+	builder := ShiftClassBuilder new
+		           buildEnvironment: self class environment;
+		           buildFromAST: ast.
+	newClass := builder build.
+	newClass comment: comment.
+	className := newClass name.
+
+	"Check if class already exists and remove it"
+	(Smalltalk globals includesKey: className) ifTrue: [
+		| existingClass |
+		existingClass := Smalltalk globals at: className.
+		existingClass package removeClassNamed: className.
+		Smalltalk globals removeKey: className ].
+
+	"Register the class in the global namespace"
+	Smalltalk globals at: newClass name put: newClass.
+
+	"Move the class to the correct package"
+	targetPackage := builder package.
+	newClass package: targetPackage.
+	
+	^ newClass
+]
+
 { #category : 'compiling' }
 ChatBot classSide >> chatCompileMethod: className source: methodSource isClassSide: isClassSide [
     | targetClass processedSource |
@@ -34,7 +63,7 @@ ChatBot classSide >> chatCompileMethod: className source: methodSource isClassSi
     ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'compiling' }
 ChatBot classSide >> chatCompileMethodFromString: str [
 	"comment stating purpose of class-side method"
 
@@ -42,19 +71,37 @@ ChatBot classSide >> chatCompileMethodFromString: str [
 
 { #category : 'compiling' }
 ChatBot classSide >> chatCompileString: str [
-	(self chatDetectIfClassOrMethod: str) ifTrue: [ "object"
-		
-		 ] ifFalse: [ "method"
-		
-		 ]
+	"Check if class or method and compile"
+
+	| methodInfo completeMethodSource |
+	(self chatDetectIfClassOrMethod: str)
+		ifTrue: [ "object" 
+			self chatCompileClass: str comment: 'Petter was here'.
+			]
+		ifFalse: [ "method"
+			methodInfo := self chatExtractMethodInfo: str.
+			completeMethodSource := WriteStream on: String new.
+			completeMethodSource
+				nextPutAll: (methodInfo at: 'className');
+				nextPutAll: ' '.
+			(methodInfo at: 'methodType') = 'class' ifTrue: [
+				completeMethodSource nextPutAll: 'class ' ].
+			completeMethodSource
+				nextPutAll: ' >> ';
+				nextPutAll: (methodInfo at: 'signature');
+				cr;
+				nextPutAll: (methodInfo at: 'source').
+			self
+				chatCompileMethod: (methodInfo at: 'className')
+				source: completeMethodSource
+				isClassSide: (methodInfo at: 'methodType') = 'class' ]
 ]
 
 { #category : 'compiling' }
 ChatBot classSide >> chatDetectIfClassOrMethod: str [
 	"check if string contains definition on a class or method"
-	^ (str lines first) includes: '<<'.
 
-	
+	^ (str lines first) includesSubstring: '<<'
 ]
 
 { #category : 'result handling' }

@@ -124,33 +124,30 @@ ChatBot classSide >> chatExtractDictFromJsonResult: jsonString [
 
 { #category : 'compiling' }
 ChatBot classSide >> chatExtractMethodInfo: inputString [
-	"Extract class, signature, methodtype and source from a method as a string"
-
-	| parts className methodType signature source dict |
-	dict := Dictionary new.
-
-	"Split the input string into parts"
-	parts := inputString trimBoth splitOn: '>>'.
-
-	"Extract class name and check for class method"
-	className := parts first trimBoth.
-	methodType := 'instance'.
-	(className endsWith: ' class') ifTrue: [
-		className := className allButLast: 6.
-		methodType := 'class' ].
-
-	dict at: 'className' put: className.
-	dict at: 'methodType' put: methodType.
-
-	"Extract method signature and source"
-	parts := parts second trimBoth splitOn: '['.
-	signature := parts first trimBoth.
-	source := '[' , (parts allButFirst joinUsing: '[').
-
-	dict at: 'signature' put: signature.
-	dict at: 'source' put: source trimBoth.
-
-	^ dict
+    "Extract class, signature, methodtype and source from a method as a string"
+    | parts className methodType signature source dict lines |
+    dict := Dictionary new.
+    
+    "Split the input string into parts"
+    parts := inputString trimBoth splitOn: '>>'.
+    
+    "Extract class name and check for class method"
+    className := parts first trimBoth.
+    methodType := 'instance'.
+    (className endsWith: ' class') ifTrue: [
+        className := className allButLast: 6.
+        methodType := 'class' ].
+    dict at: 'className' put: className.
+    dict at: 'methodType' put: methodType.
+    
+    "Extract method signature and source"
+    lines := parts second trimBoth lines.
+    signature := lines first trimBoth.
+    source := (lines allButFirst joinUsing: String cr) trimBoth.
+    
+    dict at: 'signature' put: signature.
+    dict at: 'source' put: source.
+    ^ dict
 ]
 
 { #category : 'source' }

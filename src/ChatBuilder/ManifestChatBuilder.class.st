@@ -48,7 +48,7 @@ ManifestChatBuilder class >> ruleExcessiveArgumentsRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleExcessiveVariablesRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGClassDefinition #(#ChatModelMainWindow)) #'2024-06-29T19:00:47.063567+02:00') )
+	^ #(#(#(#RGClassDefinition #(#ChatMainWindow)) #'2024-06-29T19:00:47.063567+02:00') )
 ]
 
 { #category : 'code-critics' }
@@ -62,7 +62,7 @@ ManifestChatBuilder class >> ruleLongMethodsRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#ChatModelMainWindow #openSystemConversation #false)) #'2024-06-29T20:32:28.30194+02:00') #(#(#RGMethodDefinition #(#ChatModelMainWindow #openUserConversation #false)) #'2024-07-07T13:55:25.126206+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ChatMainWindow #openSystemConversation #false)) #'2024-06-29T20:32:28.30194+02:00') #(#(#RGMethodDefinition #(#ChatMainWindow #openUserConversation #false)) #'2024-07-07T13:55:25.126206+02:00') )
 ]
 
 { #category : 'code-critics' }

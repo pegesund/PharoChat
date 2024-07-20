@@ -2,7 +2,7 @@
 Open main menu
 "
 Class {
-	#name : 'ChatModelMainWindow',
+	#name : 'ChatMainWindow',
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'openClassSelectorButton',
@@ -19,7 +19,7 @@ Class {
 }
 
 { #category : 'gui' }
-ChatModelMainWindow class >> chatShowErrorMsg: msg [
+ChatMainWindow class >> chatShowErrorMsg: msg [
 
 | presenter window |
 
@@ -60,7 +60,7 @@ window
 ]
 
 { #category : 'instance creation' }
-ChatModelMainWindow class >> open [
+ChatMainWindow class >> open [
     | app window |
     app := ChatApplication new.
     window := self new.
@@ -69,28 +69,7 @@ ChatModelMainWindow class >> open [
 ]
 
 { #category : 'initialization' }
-ChatModelMainWindow >> defaultLayout [
-    ^ SpBoxLayout newVertical
-        add: openClassSelectorButton;
-        add: openUserConversationButton;
-        add: openSystemConversationButton;
-        add: sendConversationButton;
-        yourself
-]
-
-{ #category : 'as yet unclassified' }
-ChatModelMainWindow >> getSelectedMethods [
-    ^ self application savedMethods
-]
-
-{ #category : 'as yet unclassified' }
-ChatModelMainWindow >> getSelectedMethodsText [
-    "This is a placeholder. Implement the actual logic to get selected methods"
-    ^ 'Selected methods will be shown here'
-]
-
-{ #category : 'initialization' }
-ChatModelMainWindow >> initializePresenters [
+ChatMainWindow >> initializePresenters [
     openClassSelectorButton := self newButton
         label: 'Open Class Selector';
         action: [ self openClassSelector ].
@@ -113,19 +92,14 @@ ChatModelMainWindow >> initializePresenters [
 ]
 
 { #category : 'ui' }
-ChatModelMainWindow >> openClassSelector [
+ChatMainWindow >> openClassSelector [
     chatMethodSelector := ChatMethodSelector new.
     chatMethodSelector application: self application.
     chatMethodSelector open
 ]
 
-{ #category : 'as yet unclassified' }
-ChatModelMainWindow >> openSendConversationDialog [
-    ^ SendToModelDialog openWithApplication: (self application)
-]
-
 { #category : 'initialization' }
-ChatModelMainWindow >> openSystemConversation [
+ChatMainWindow >> openSystemConversation [
 
 	systemConversationDialog ifNotNil: [ :dialog |
 		dialog window ifNotNil: #close ].
@@ -141,7 +115,7 @@ ChatModelMainWindow >> openSystemConversation [
 ]
 
 { #category : 'initialization' }
-ChatModelMainWindow >> openTextDialog: title initialText: initialText onAccept: acceptBlock [
+ChatMainWindow >> openTextDialog: title initialText: initialText onAccept: acceptBlock [
     | dialog |
     dialog := TextInputDialog new.
     dialog
@@ -155,7 +129,7 @@ ChatModelMainWindow >> openTextDialog: title initialText: initialText onAccept: 
 ]
 
 { #category : 'initialization' }
-ChatModelMainWindow >> openUserConversation [
+ChatMainWindow >> openUserConversation [
 
 	userConversationDialog ifNotNil: [ :dialog |
 		dialog window ifNotNil: #close ].
@@ -168,14 +142,8 @@ ChatModelMainWindow >> openUserConversation [
 	userConversationDialog title: 'Enter user conversation text'
 ]
 
-{ #category : 'as yet unclassified' }
-ChatModelMainWindow >> sendConversationToModel: modelName [
-    "Implement the logic to send the conversation to the selected model"
-    self inform: 'Sending conversation to ', modelName.
-]
-
 { #category : 'TOREMOVE' }
-ChatModelMainWindow >> title [ 
+ChatMainWindow >> title [ 
 
  ^ 'Code generator'
 ]

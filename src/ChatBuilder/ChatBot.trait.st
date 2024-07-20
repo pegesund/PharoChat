@@ -19,6 +19,7 @@ Trait {
 { #category : 'tests' }
 ChatBot classSide >> chatCompileClass: sourceCode comment: comment [
 	"compiles a string a class"
+
 	| builder newClass targetPackage className ast |
 	ast := CDFluidClassDefinitionParser parse: sourceCode.
 	builder := ShiftClassBuilder new
@@ -41,26 +42,27 @@ ChatBot classSide >> chatCompileClass: sourceCode comment: comment [
 	"Move the class to the correct package"
 	targetPackage := builder package.
 	newClass package: targetPackage.
-	
-	^ newClass
+
+	^ #ok
 ]
 
 { #category : 'compiling' }
 ChatBot classSide >> chatCompileMethod: className source: methodSource isClassSide: isClassSide [
-    | targetClass processedSource |
-    
-    processedSource := methodSource copyReplaceAll: '\n' with: String cr.
-    processedSource := processedSource copyReplaceAll: '\t' with: String tab.
-    
-    ^ [
-        targetClass := Smalltalk at: className asSymbol.
-        isClassSide ifTrue: [ targetClass := targetClass class ].
-        
-        targetClass compile: processedSource.
-        #ok
-    ] on: Error do: [ :error |
-        error messageText
-    ]
+
+	| targetClass processedSource res |
+	processedSource := methodSource copyReplaceAll: '\n' with: String cr.
+	processedSource := processedSource
+		                   copyReplaceAll: '\t'
+		                   with: String tab.
+
+	^ [
+	  targetClass := Smalltalk at: className asSymbol.
+	  isClassSide ifTrue: [ targetClass := targetClass class ].
+
+	  res:= targetClass compile: processedSource.
+	  #ok ]
+		  on: Error
+		  do: [ :error | error messageText ]
 ]
 
 { #category : 'compiling' }
@@ -140,19 +142,21 @@ ChatBot classSide >> chatExtractMethodInfo: inputString [
 
 { #category : 'tools' }
 ChatBot classSide >> chatOpenBrowserOn: className selector: methodName [
-    | class method selectorSymbol |
-    class := Smalltalk at: className asSymbol ifAbsent: [^ self error: 'Class not found'].
-    selectorSymbol := methodName asSymbol.
-    method := class methodDictionary 
-        at: selectorSymbol 
-        ifAbsent: [
-            "Try replacing spaces with colons for multi-keyword selectors"
-            selectorSymbol := (methodName replaceAll: ' ' with: ':') asSymbol.
-            class methodDictionary 
-                at: selectorSymbol 
-                ifAbsent: [^ self error: 'Method not found']
-        ].
-    Smalltalk tools browser openOnMethod: class >> selectorSymbol
+	"Both params are strings"
+	| class method selectorSymbol |
+	class := Smalltalk
+		         at: className asSymbol
+		         ifAbsent: [ ^ self error: 'Class not found' ].
+	selectorSymbol := methodName asSymbol.
+	method := class methodDictionary
+		          at: selectorSymbol
+		          ifAbsent: [ "Try replacing spaces with colons for multi-keyword selectors"
+			          selectorSymbol := (methodName replaceAll: ' ' with: ':')
+				                            asSymbol.
+			          class methodDictionary
+				          at: selectorSymbol
+				          ifAbsent: [ ^ self error: 'Method not found' ] ].
+	Smalltalk tools browser openOnMethod: class >> selectorSymbol
 ]
 
 { #category : 'source' }
@@ -198,6 +202,21 @@ ChatBot classSide >> chatSourceCodeForPackage: aPackageName [
 					              nextPut: Character cr;
 					              nextPut: Character cr ] ] ].
 	^ sourceCode
+]
+
+{ #category : 'source' }
+ChatBot classSide >> chatStringToMethodSymbol: aString [
+	"Converts a string of method signatur type to a symbol"
+    | parts selector |
+    parts := aString splitOn: Character space.
+    selector := String streamContents: [ :stream |
+        parts withIndexDo: [ :part :index |
+            (index odd) ifTrue: [
+                stream nextPutAll: part.
+            ]
+        ].
+    ].
+    ^ selector asSymbol
 ]
 
 { #category : 'tests' }

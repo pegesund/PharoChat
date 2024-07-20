@@ -69,7 +69,7 @@ MultiCodePresenterWithToolbars >> chatCompileEditor: anEditor [
 		         ifAbsent: [ nil ].
 	content := anEditor text.
 	compileRes := ChatBot chatCompileString: content.
-	compileRes = #ok ifFalse: [ "show comilation errors"
+	(compileRes = #ok) ifFalse: [ "show comilation errors"
 		ChatMainWindow chatShowErrorMsg: compileRes ].
 	index
 		ifNotNil: [
@@ -78,8 +78,7 @@ MultiCodePresenterWithToolbars >> chatCompileEditor: anEditor [
 			self inform: 'Saving editor content: ' , anEditor text.
 			self updateStatusAt: index with: (compileRes = #ok
 					 ifTrue: [ 'Compiled' ]
-					 ifFalse: [ 'Error' ]).
-			 ]
+					 ifFalse: [ 'Error' ]) ]
 		ifNil: [ self inform: 'Editor not found' ]
 ]
 
@@ -110,16 +109,16 @@ MultiCodePresenterWithToolbars >> initializePresenters [
 
 { #category : 'compiling' }
 MultiCodePresenterWithToolbars >> loadEditor: anEditor [
-    | index |
-    index := codeEditorPairs indexOf: (codeEditorPairs detect: [:pair | pair second == anEditor]) ifAbsent: [nil].
-    index ifNotNil: [
-        self updateStatusAt: index with: 'Loading...'.
-        "Implement load logic for the specific editor"
-        self inform: 'Loading content for editor'.
-        self updateStatusAt: index with: 'Loaded'
-    ] ifNil: [
-        self inform: 'Editor not found'
-    ]
+
+| content methodInfo signatureAsSymbol |
+content := anEditor text.
+(ChatBot chatDetectIfClassOrMethod: content ) ifTrue: [ 
+	
+	 ] ifFalse: [ "it is a method"
+		methodInfo := ChatBot chatExtractMethodInfo: content.
+		signatureAsSymbol := ChatBot chatStringToMethodSymbol: (methodInfo at: 'signature').
+		ChatBot chatOpenBrowserOn: (methodInfo at: 'className') selector: signatureAsSymbol .
+	  ]
 ]
 
 { #category : 'initialization' }

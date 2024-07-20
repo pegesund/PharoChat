@@ -68,6 +68,27 @@ ChatMainWindow class >> open [
     ^ window open
 ]
 
+{ #category : 'layout' }
+ChatMainWindow >> defaultLayout [
+    ^ SpBoxLayout newVertical
+        add: openClassSelectorButton;
+        add: openUserConversationButton;
+        add: openSystemConversationButton;
+        add: sendConversationButton;
+        yourself
+]
+
+{ #category : 'ui' }
+ChatMainWindow >> getSelectedMethods [
+    ^ self application savedMethods
+]
+
+{ #category : 'ui' }
+ChatMainWindow >> getSelectedMethodsText [
+    "This is a placeholder. Implement the actual logic to get selected methods"
+    ^ 'Selected methods will be shown here'
+]
+
 { #category : 'initialization' }
 ChatMainWindow >> initializePresenters [
     openClassSelectorButton := self newButton
@@ -96,6 +117,11 @@ ChatMainWindow >> openClassSelector [
     chatMethodSelector := ChatMethodSelector new.
     chatMethodSelector application: self application.
     chatMethodSelector open
+]
+
+{ #category : 'ui' }
+ChatMainWindow >> openSendConversationDialog [
+    ^ SendToModelDialog openWithApplication: (self application)
 ]
 
 { #category : 'initialization' }
@@ -140,6 +166,12 @@ ChatMainWindow >> openUserConversation [
 		                          onAccept: [ :text |
 		                          self application userConversation: text ].
 	userConversationDialog title: 'Enter user conversation text'
+]
+
+{ #category : 'ui' }
+ChatMainWindow >> sendConversationToModel: modelName [
+    "Implement the logic to send the conversation to the selected model"
+    self inform: 'Sending conversation to ', modelName.
 ]
 
 { #category : 'TOREMOVE' }

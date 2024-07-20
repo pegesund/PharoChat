@@ -153,6 +153,51 @@ ChatBot classSide >> chatExtractMethodInfo: inputString [
 	^ dict
 ]
 
+{ #category : 'source' }
+ChatBot classSide >> chatSourceCodeForPackage: aPackageName [
+
+	| package classes sourceCode |
+	package := self packageOrganizer packageNamed: aPackageName.
+	classes := package definedClasses.
+	sourceCode := String streamContents: [ :stream |
+		              classes do: [ :class |
+			              stream
+				              nextPutAll: class definitionString;
+				              nextPut: Character cr;
+				              nextPut: Character cr.
+
+			              "Add class comment"
+			              stream
+				              nextPutAll: '"';
+				              nextPutAll: (class comment ifNil: [ '' ]);
+				              nextPutAll: '"';
+				              nextPut: Character cr;
+				              nextPut: Character cr.
+
+			              "Instance methods"
+			              stream
+				              nextPutAll: '!Instance methods!';
+				              nextPut: Character cr;
+				              nextPut: Character cr.
+			              class methods do: [ :method |
+				              stream
+					              nextPutAll: method sourceCode;
+					              nextPut: Character cr;
+					              nextPut: Character cr ].
+
+			              "Class methods"
+			              stream
+				              nextPutAll: '!Class methods!';
+				              nextPut: Character cr;
+				              nextPut: Character cr.
+			              class class methods do: [ :method |
+				              stream
+					              nextPutAll: method sourceCode;
+					              nextPut: Character cr;
+					              nextPut: Character cr ] ] ].
+	^ sourceCode
+]
+
 { #category : 'tests' }
 ChatBot classSide >> testAddMethod [
 	"comment stating purpose of class-side method"

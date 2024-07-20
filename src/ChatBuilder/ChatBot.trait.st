@@ -69,10 +69,12 @@ ChatBot classSide >> chatCompileMethod: className source: methodSource isClassSi
 ChatBot classSide >> chatCompileString: str [
 	"Check if class or method and compile"
 
-	| methodInfo source |
+	| methodInfo source compObj |
 	(self chatDetectIfClassOrMethod: str)
 		ifTrue: [ "object"
-		^ self chatCompileClass: str comment: 'Petter was here' ]
+		compObj := [self chatCompileClass: str comment: 'Petter was here' ] on: Exception do: [ :ex | ex asString ].
+		^ compObj .
+		]
 		ifFalse: [ "method"
 			methodInfo := self chatExtractMethodInfo: str.
 			source := WriteStream on: String new.

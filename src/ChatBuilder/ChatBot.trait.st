@@ -64,37 +64,22 @@ ChatBot classSide >> chatCompileMethod: className source: methodSource isClassSi
 ]
 
 { #category : 'compiling' }
-ChatBot classSide >> chatCompileMethodFromString: str [
-	"comment stating purpose of class-side method"
-
-]
-
-{ #category : 'compiling' }
 ChatBot classSide >> chatCompileString: str [
 	"Check if class or method and compile"
 
-	| methodInfo completeMethodSource |
+	| methodInfo source |
 	(self chatDetectIfClassOrMethod: str)
-		ifTrue: [ "object" 
-			self chatCompileClass: str comment: 'Petter was here'.
-			]
+		ifTrue: [ "object"
+		^ self chatCompileClass: str comment: 'Petter was here' ]
 		ifFalse: [ "method"
 			methodInfo := self chatExtractMethodInfo: str.
-			completeMethodSource := WriteStream on: String new.
-			completeMethodSource
-				nextPutAll: (methodInfo at: 'className');
-				nextPutAll: ' '.
-			(methodInfo at: 'methodType') = 'class' ifTrue: [
-				completeMethodSource nextPutAll: 'class ' ].
-			completeMethodSource
-				nextPutAll: ' >> ';
-				nextPutAll: (methodInfo at: 'signature');
-				cr;
-				nextPutAll: (methodInfo at: 'source').
-			self
-				chatCompileMethod: (methodInfo at: 'className')
-				source: completeMethodSource
-				isClassSide: (methodInfo at: 'methodType') = 'class' ]
+			source := WriteStream on: String new.
+			source nextPutAll: (methodInfo at: 'signature'); cr; tab; nextPutAll: (methodInfo at: 'source').
+			source inspect.
+			^ self
+				  chatCompileMethod: (methodInfo at: 'className')
+				  source: (source contents)
+				  isClassSide: (methodInfo at: 'methodType') = 'class' ]
 ]
 
 { #category : 'compiling' }

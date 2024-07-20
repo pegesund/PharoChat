@@ -58,13 +58,13 @@ ChatMethodSelector >> deselectMethodInSelectedList: aMethod [
         Transcript show: 'Deselected method in list: ', aMethod selector; cr ].
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> forceUpdateRemoveButtonState [
     self updateRemoveButtonState.
     Transcript show: 'Force update remove button state'; cr.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> getChangedMethodsFor: class [
     | changedMethods currentMethods commitMethods |
     currentMethods := (class methods, class class methods) asSet.
@@ -147,7 +147,7 @@ ChatMethodSelector >> initializePresenters [
     self updateSaveButtonState
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> removeSelectedMethods [
     | methodsToRemove currentClass |
     Transcript show: 'Remove button clicked'; cr.
@@ -170,7 +170,7 @@ ChatMethodSelector >> removeSelectedMethods [
     Transcript show: 'Remove operation completed'; cr.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> saveSelectedMethods [
     | app |
     app := self application.
@@ -213,7 +213,7 @@ ChatMethodSelector >> updateMethodList [
         Transcript show: 'Updated Changed Methods list'; cr. ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> updateMethodsFor: class [
     | changedMethods |
     changedMethods := self getChangedMethodsFor: class.
@@ -221,7 +221,7 @@ ChatMethodSelector >> updateMethodsFor: class [
     Transcript show: 'Updated methods for class: ', class name, '. Changed methods: ', changedMethods size asString; cr.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> updatePackageList [
     | filteredPackages |
     filteredPackages := self allPackages select: [ :package | 
@@ -230,7 +230,7 @@ ChatMethodSelector >> updatePackageList [
     packageList items: filteredPackages
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> updateRemoveButtonState [
     | isEnabled selectedIndexes |
     selectedIndexes := selectedMethodsList selection selectedIndexes.
@@ -244,14 +244,14 @@ ChatMethodSelector >> updateRemoveButtonState [
         cr.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> updateSaveButtonState [
     saveButton ifNotNil: [
         saveButton enabled: (selectedMethods notNil and: [selectedMethods notEmpty])
     ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> updateSelectedMethodsList [
     | newItems |
     Transcript show: 'Updating selected methods list. Current size: ', selectedMethods size asString; cr.

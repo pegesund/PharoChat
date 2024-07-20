@@ -84,7 +84,7 @@ MultiCodePresenterWithToolbars >> initializePresenters [
 		                     yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'compiling' }
 MultiCodePresenterWithToolbars >> loadEditor: anEditor [
     | index |
     index := codeEditorPairs indexOf: (codeEditorPairs detect: [:pair | pair second == anEditor]) ifAbsent: [nil].
@@ -98,7 +98,7 @@ MultiCodePresenterWithToolbars >> loadEditor: anEditor [
     ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'compiling' }
 MultiCodePresenterWithToolbars >> saveEditor: anEditor [
     | index |
     index := codeEditorPairs indexOf: (codeEditorPairs detect: [:pair | pair second == anEditor]) ifAbsent: [nil].

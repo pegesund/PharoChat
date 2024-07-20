@@ -36,7 +36,7 @@ TextInputDialog >> defaultLayout [
         yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'showing' }
 TextInputDialog >> initialText: aString [
     textInput text: aString
 ]

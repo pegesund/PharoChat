@@ -1,5 +1,5 @@
 "
-Gui for environment
+Gui for environment. With this class one can currently only set api keys.
 "
 Class {
 	#name : 'ChatEnvironment',
@@ -45,7 +45,7 @@ ChatEnvironment >> execute [
 			ifEmpty: [ UIManager default inform: 'API Key cannot be empty.' ] ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatEnvironment >> menuItem [
     ^ #'library'
 ]
@@ -67,20 +67,19 @@ ChatEnvironment >> pexecute [
 			ifEmpty: [ UIManager default inform: 'API Key cannot be empty.' ] ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatEnvironment >> promptAndSetOpenAIAPIKey [
-        | apiKey |
-        apiKey := UIManager default 
-            request: 'Enter your OpenAI API Key:'
-            initialAnswer: ''
-            title: 'OpenAI API Key'.
-        
-        apiKey ifNotNil: [
-            apiKey ifNotEmpty: [
-                ChatEnvironment setApiKey: apiKey.
-                UIManager default inform: 'API Key has been set successfully.'
-            ] ifEmpty: [
-                UIManager default inform: 'API Key cannot be empty.'
-            ]
-        ]
+
+	| apiKey |
+	apiKey := UIManager default
+		          request: 'Enter your OpenAI API Key:'
+		          initialAnswer: ''
+		          title: 'OpenAI API Key'.
+
+	apiKey ifNotNil: [
+		apiKey
+			ifNotEmpty: [
+				self class setApiKey: apiKey.
+				UIManager default inform: 'API Key has been set successfully.' ]
+			ifEmpty: [ UIManager default inform: 'API Key cannot be empty.' ] ]
 ]

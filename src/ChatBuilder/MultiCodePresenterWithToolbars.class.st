@@ -110,15 +110,20 @@ MultiCodePresenterWithToolbars >> initializePresenters [
 { #category : 'compiling' }
 MultiCodePresenterWithToolbars >> loadEditor: anEditor [
 
-| content methodInfo signatureAsSymbol |
-content := anEditor text.
-(ChatBot chatDetectIfClassOrMethod: content ) ifTrue: [ 
-	
-	 ] ifFalse: [ "it is a method"
-		methodInfo := ChatBot chatExtractMethodInfo: content.
-		signatureAsSymbol := ChatBot chatStringToMethodSymbol: (methodInfo at: 'signature').
-		ChatBot chatOpenBrowserOn: (methodInfo at: 'className') selector: signatureAsSymbol .
-	  ]
+	| content methodInfo signatureAsSymbol theClassName |
+	content := anEditor text.
+	(ChatBot chatDetectIfClassOrMethod: content)
+		ifTrue: [
+			theClassName := ChatBot chatExtractClassName: content.
+			Smalltalk tools browser openOnClass:
+				(self class environment at: (theClassName asSymbol)) ]
+		ifFalse: [ "it is a method"
+			methodInfo := ChatBot chatExtractMethodInfo: content.
+			signatureAsSymbol := ChatBot chatStringToMethodSymbol:
+				                     (methodInfo at: 'signature').
+			ChatBot
+				chatOpenBrowserOn: (methodInfo at: 'className')
+				selector: signatureAsSymbol ]
 ]
 
 { #category : 'initialization' }

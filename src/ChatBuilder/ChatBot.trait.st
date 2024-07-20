@@ -94,6 +94,17 @@ ChatBot classSide >> chatDetectIfClassOrMethod: str [
 	^ (str lines first) includesSubstring: '<<'
 ]
 
+{ #category : 'source' }
+ChatBot classSide >> chatExtractClassName: aString [
+    | lines firstLine parts |
+    lines := aString lines.
+    firstLine := lines first trimBoth.
+    parts := firstLine splitOn: ' << #'.
+    parts size > 1 
+        ifTrue: [ ^ parts second ]
+        ifFalse: [ ^ nil ]
+]
+
 { #category : 'result handling' }
 ChatBot classSide >> chatExtractDictFromJsonResult: jsonString [
 	"Extract data returned from the llm"

@@ -135,6 +135,23 @@ ChatBot classSide >> chatExtractMethodInfo: inputString [
     ^ dict
 ]
 
+{ #category : 'tools' }
+ChatBot classSide >> chatOpenBrowserOn: className selector: methodName [
+    | class method selectorSymbol |
+    class := Smalltalk at: className asSymbol ifAbsent: [^ self error: 'Class not found'].
+    selectorSymbol := methodName asSymbol.
+    method := class methodDictionary 
+        at: selectorSymbol 
+        ifAbsent: [
+            "Try replacing spaces with colons for multi-keyword selectors"
+            selectorSymbol := (methodName replaceAll: ' ' with: ':') asSymbol.
+            class methodDictionary 
+                at: selectorSymbol 
+                ifAbsent: [^ self error: 'Method not found']
+        ].
+    Smalltalk tools browser openOnMethod: class >> selectorSymbol
+]
+
 { #category : 'source' }
 ChatBot classSide >> chatSourceCodeForPackage: aPackageName [
 
@@ -224,12 +241,6 @@ targetPackage := builder package.
 newClass package: targetPackage.
 
 ^ newClass
-]
-
-{ #category : 'tests' }
-ChatBot classSide >> testUsePetterTest [
-	"comment stating purpose of class-side method"
-	^ MyClassPetter7 new.
 ]
 
 { #category : 'sending' }

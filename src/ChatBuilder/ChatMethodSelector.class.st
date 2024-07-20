@@ -48,14 +48,17 @@ ChatMethodSelector >> defaultLayout [
         yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> deselectMethodInSelectedList: aMethod [
-    | index |
-    index := selectedMethodsList items indexOf: aMethod.
-    index > 0 ifTrue: [
-        selectedMethodsList unselectIndex: index.
-        self updateRemoveButtonState.
-        Transcript show: 'Deselected method in list: ', aMethod selector; cr ].
+
+	| index |
+	index := selectedMethodsList items indexOf: aMethod.
+	index > 0 ifFalse: [ ^ self ].
+	selectedMethodsList unselectIndex: index.
+	self updateRemoveButtonState.
+	Transcript
+		show: 'Deselected method in list: ' , aMethod selector;
+		cr
 ]
 
 { #category : 'gui' }
@@ -179,14 +182,19 @@ ChatMethodSelector >> saveSelectedMethods [
     self application.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'gui' }
 ChatMethodSelector >> selectMethodInSelectedList: aMethod [
-    | index |
-    index := selectedMethodsList items indexOf: aMethod.
-    index > 0 ifTrue: [
-        selectedMethodsList selectIndex: index.
-        Transcript show: 'Selected method in list: ', aMethod selector, ' at index: ', index asString; cr.
-        self updateRemoveButtonState ].
+
+	| index |
+	index := selectedMethodsList items indexOf: aMethod.
+	index > 0 ifFalse: [ ^ self ].
+	selectedMethodsList selectIndex: index.
+	Transcript
+		show:
+			'Selected method in list: ' , aMethod selector , ' at index: '
+			, index asString;
+		cr.
+	self updateRemoveButtonState
 ]
 
 { #category : 'accessing' }

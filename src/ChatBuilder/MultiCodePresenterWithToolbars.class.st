@@ -25,7 +25,7 @@ MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar: isUpdate [
 				               label: 'Compile';
 				               icon: (self iconNamed: #smallSave);
 				               help: 'Compile';
-				               action: [ self saveEditor: newEditor ];
+				               action: [ self chatCompileEditor: newEditor ];
 				               yourself);
 		              addItem: (SpToolbarButtonPresenter new
 				               label: 'Open';
@@ -57,6 +57,30 @@ MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar: isUpdate [
 		        statusLabel }.
 	codeEditorPairs add: pair.
 	self updateLayout
+]
+
+{ #category : 'compiling' }
+MultiCodePresenterWithToolbars >> chatCompileEditor: anEditor [
+
+	| index content compileRes |
+	index := codeEditorPairs
+		         indexOf:
+		         (codeEditorPairs detect: [ :pair | pair second == anEditor ])
+		         ifAbsent: [ nil ].
+	content := anEditor text.
+	compileRes := ChatBot chatCompileString: content.
+	compileRes = #ok ifFalse: [ "show comilation errors"
+		ChatMainWindow chatShowErrorMsg: compileRes ].
+	index
+		ifNotNil: [
+			self updateStatusAt: index with: 'Compiling...'.
+			"Implement save logic for the specific editor"
+			self inform: 'Saving editor content: ' , anEditor text.
+			self updateStatusAt: index with: (compileRes = #ok
+					 ifTrue: [ 'Compiled' ]
+					 ifFalse: [ 'Error' ]).
+			 ]
+		ifNil: [ self inform: 'Editor not found' ]
 ]
 
 { #category : 'accessing' }
@@ -93,20 +117,6 @@ MultiCodePresenterWithToolbars >> loadEditor: anEditor [
         "Implement load logic for the specific editor"
         self inform: 'Loading content for editor'.
         self updateStatusAt: index with: 'Loaded'
-    ] ifNil: [
-        self inform: 'Editor not found'
-    ]
-]
-
-{ #category : 'compiling' }
-MultiCodePresenterWithToolbars >> saveEditor: anEditor [
-    | index |
-    index := codeEditorPairs indexOf: (codeEditorPairs detect: [:pair | pair second == anEditor]) ifAbsent: [nil].
-    index ifNotNil: [
-        self updateStatusAt: index with: 'Saving...'.
-        "Implement save logic for the specific editor"
-        self inform: 'Saving editor content: ' , anEditor text.
-        self updateStatusAt: index with: 'Saved'
     ] ifNil: [
         self inform: 'Editor not found'
     ]

@@ -74,11 +74,14 @@ ChatBot classSide >> chatCompileString: str [
 		ifFalse: [ "method"
 			methodInfo := self chatExtractMethodInfo: str.
 			source := WriteStream on: String new.
-			source nextPutAll: (methodInfo at: 'signature'); cr; tab; nextPutAll: (methodInfo at: 'source').
-			source inspect.
+			source
+				nextPutAll: (methodInfo at: 'signature');
+				cr;
+				tab;
+				nextPutAll: (methodInfo at: 'source').
 			^ self
 				  chatCompileMethod: (methodInfo at: 'className')
-				  source: (source contents)
+				  source: source contents
 				  isClassSide: (methodInfo at: 'methodType') = 'class' ]
 ]
 

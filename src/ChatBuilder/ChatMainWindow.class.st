@@ -70,13 +70,15 @@ ChatMainWindow class >> open [
 
 { #category : 'layout' }
 ChatMainWindow >> defaultLayout [
+	application mainWindow: self.
+
 	^ SpBoxLayout newVertical
-    add: openClassSelectorButton;
-    add: openUserConversationButton;
-    add: openSystemConversationButton;
-    add: openPackageSelectorButton;
-    add: sendConversationButton;
-    yourself
+		  add: openClassSelectorButton;
+		  add: openUserConversationButton;
+		  add: openSystemConversationButton;
+		  add: openPackageSelectorButton;
+		  add: sendConversationButton;
+		  yourself
 ]
 
 { #category : 'ui' }
@@ -91,7 +93,7 @@ ChatMainWindow >> initializePresenters [
 	openClassSelectorButton := self newButton
 		                           label: 'Select Class';
 		                           action: [ self openClassSelector ].
-	openClassSelectorButton application: self application.	
+	openClassSelectorButton application: self application.
 
 	openPackageSelectorButton := self newButton
 		                             label: 'Open Package Selector';
@@ -115,6 +117,7 @@ ChatMainWindow >> initializePresenters [
 	"Initialize dialog instances"
 	userConversationDialog := nil.
 	systemConversationDialog := nil.
+	
 
 	^ SpBoxLayout newVertical
 		  add: openClassSelectorButton;
@@ -130,9 +133,8 @@ ChatMainWindow >> openClassSelector [
 
 	| dialog |
 	dialog := ChatClassSelector new application: self application.
-
-	dialog 	open.
-
+	dialog open.
+	dialog window title: 'Select classes'
 ]
 
 { #category : 'ui' }

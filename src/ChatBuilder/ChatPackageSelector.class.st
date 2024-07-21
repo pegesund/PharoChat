@@ -58,6 +58,7 @@ ChatPackageSelector >> selectPackage [
 	selectedPackage ifNotNil: [
 		self application currentPackage: selectedPackage name.
 		self packageSelected: selectedPackage.
+		self application mainWindow window title: 'Code Generator: ' , (selectedPackage name) .
 		self window close ]
 ]
 

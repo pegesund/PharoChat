@@ -10,7 +10,8 @@ Class {
 		'savedMethods',
 		'apiContent',
 		'currentPackage',
-		'selectedClasses'
+		'selectedClasses',
+		'mainWindow'
 	],
 	#category : 'ChatBuilder-chat',
 	#package : 'ChatBuilder',
@@ -146,6 +147,18 @@ Object << #MyClass
 While creating classes and/or methods, make sure that classes which are bases for other new classes comes first in listing. Same goes for methods: Methods which are used by other new methods should be listed first.
 		
 	'
+]
+
+{ #category : 'accessing' }
+ChatApplication >> mainWindow [
+
+	^ mainWindow
+]
+
+{ #category : 'accessing' }
+ChatApplication >> mainWindow: anObject [
+
+	mainWindow := anObject
 ]
 
 { #category : 'accessing' }

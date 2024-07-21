@@ -140,7 +140,7 @@ MultiCodePresenterWithToolbars >> showGraphicalDiff: anEditor [
 	(ChatBot chatDetectIfClassOrMethod: content)
 		ifTrue: [ "It is a class"
 			theClassName := ChatBot chatExtractClassName: content.
-			currentSource := (Smalltalk at: theClassName asSymbol) sourceCode ]
+			currentSource := (Smalltalk at: theClassName asSymbol) definitionString ]
 		ifFalse: [ "It is a method"
 			methodInfo := ChatBot chatExtractMethodInfo: content.
 
@@ -162,18 +162,19 @@ MultiCodePresenterWithToolbars >> showGraphicalDiff: anEditor [
 			content := (RBParser parseMethod: sourceWithSingatureOnly)
 				           formattedCode ]
 				on: Exception
-				do: [ :e | e signal ].
+				do: [ :e | ChatMainWindow chatShowErrorMsg: 'Suggested code is not parsable'. ].
 			content := (methodInfo at: 'className') , ' >> ' , content ].
 
 	diffPresenter := SpDiffPresenter new.
-	diffPresenter extent: 500 @ 500. "TODO: Why does not this work"
 	diffPresenter
 		leftLabel: 'Current';
 		leftText: currentSource;
 		rightLabel: 'Suggestion';
 		rightText: content.
 	diffPresenter open.
-	diffPresenter window title: 'Diffences'; resize: 1300@500.
+	diffPresenter window
+		title: 'Differences';
+		resize: 1300 @ 500
 ]
 
 { #category : 'accessing' }

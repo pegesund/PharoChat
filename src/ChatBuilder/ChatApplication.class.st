@@ -158,6 +158,11 @@ ChatApplication >> savedMethods: aCollection [
     savedMethods := aCollection asOrderedCollection
 ]
 
+{ #category : 'chat' }
+ChatApplication >> selectedClasses [
+	^ selectedClasses
+]
+
 { #category : 'accessing' }
 ChatApplication >> selectedClasses: anObject [
 

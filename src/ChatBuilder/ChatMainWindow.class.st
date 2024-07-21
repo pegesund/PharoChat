@@ -75,8 +75,8 @@ ChatMainWindow >> defaultLayout [
     add: openClassSelectorButton;
     add: openUserConversationButton;
     add: openSystemConversationButton;
-    add: sendConversationButton;
     add: openPackageSelectorButton;
+    add: sendConversationButton;
     yourself
 ]
 
@@ -106,13 +106,13 @@ openSystemConversationButton := self newButton
    label: 'Open System Conversation';
    action: [ self openSystemConversation ].
 
-sendConversationButton := self newButton
-   label: 'Send Conversation';
-   action: [ self openSendConversationDialog ].
-
 openPackageSelectorButton := self newButton
    label: 'Open Package Selector';
    action: [ self openPackageSelector ].
+
+sendConversationButton := self newButton
+   label: 'Send Conversation';
+   action: [ self openSendConversationDialog ].
 
 "Initialize dialog instances"
 userConversationDialog := nil.

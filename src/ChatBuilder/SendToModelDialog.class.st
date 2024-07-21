@@ -46,45 +46,47 @@ SendToModelDialog >> initializePresenters [
 
 	self extent: 500 @ 800.
 	self layout: (SpBoxLayout newVertical
-				spacing: 10;
-				add: 'System Conversation' expand: false;
-				add: (self newText
-						text: (application systemConversation ifNil: [ '' ]);
-						enabled: false;
-						beNotEditable)
-			height: 200;
-				add: 'User Conversation' expand: false;
-				add: ((self newText
-							text: (application concatenateInfoForAPI );
-							enabled: false;
-							beNotEditable)
-							when: #mouseClick send: #openUserConversationDialog to: self)
-			height: 200;
-				add: 'Selected Methods' expand: false;
-				add: (self newList
-						items: selectedMethods;
-						display: [ :method |
-							method
-								ifNil: [ 'No methods selected' ]
-								ifNotNil: [
-									method methodClass name , ' >> ' , method selector ] ];
-						enabled: false)
-			height: 200;
-				add: 'Select Model' expand: false;
-				add: (modelSelector := self newDropList
-								items:
-									#( 'gpt-4o' 'gpt-3.5-turbo' 'gpt-4-turbo' );
-									selectIndex: 1)
-			height: 30;
-				add: (self newButton
-						label: 'Send';
-						action: [
-							| codeAsJson |
-							codeAsJson := self application sendToChatModel:
-										modelSelector selectedItem.
-							self openCodeWindow: codeAsJson ])
-			height: 40;
-			yourself)
+			 spacing: 10;
+			 add: 'System Conversation' expand: false;
+			 add: (self newText
+					  text: (application systemConversation ifNil: [ '' ]);
+					  enabled: false;
+					  beNotEditable)
+			 height: 200;
+			 add: 'User Conversation' expand: false;
+			 add: ((self newText
+					   text: application concatenateInfoForAPI;
+					   enabled: false;
+					   beNotEditable)
+					  when: #mouseClick
+					  send: #openUserConversationDialog
+					  to: self)
+			 height: 200;
+			 add: 'Selected Methods' expand: false;
+			 add: (self newList
+					  items: selectedMethods;
+					  display: [ :method |
+						  method
+							  ifNil: [ 'No methods selected' ]
+							  ifNotNil: [
+								  method methodClass name , ' >> ' , method selector ] ];
+					  enabled: false)
+			 height: 200;
+			 add: 'Select Model' expand: false;
+			 add: (modelSelector := self newDropList
+					                   items:
+						                   #( 'gpt-4o' 'gpt-3.5-turbo' 'gpt-4-turbo' );
+					                   selectIndex: 1)
+			 height: 30;
+			 add: (self newButton
+					  label: 'Send';
+					  action: [
+						  | codeAsJson |
+						  codeAsJson := self application sendToChatModel:
+								                modelSelector selectedItem.
+						  self openCodeWindow: codeAsJson ])
+			 height: 40;
+			 yourself)
 ]
 
 { #category : 'initialization' }
@@ -130,5 +132,5 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 { #category : 'codeUI' }
 SendToModelDialog >> openUserConversationDialog [
 	"Handle the user conversation text click event to open the 'Open User conversation' dialog."
-    self application openUserConversation
+	self application openUserConversation
 ]

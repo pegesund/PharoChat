@@ -9,7 +9,8 @@ Class {
 		'systemConversation',
 		'savedMethods',
 		'apiContent',
-		'currentPackage'
+		'currentPackage',
+		'selectedClasses'
 	],
 	#category : 'ChatBuilder-chat',
 	#package : 'ChatBuilder',
@@ -155,6 +156,12 @@ ChatApplication >> savedMethods [
 { #category : 'accessing' }
 ChatApplication >> savedMethods: aCollection [
     savedMethods := aCollection asOrderedCollection
+]
+
+{ #category : 'accessing' }
+ChatApplication >> selectedClasses: anObject [
+
+	selectedClasses := anObject
 ]
 
 { #category : 'chat' }

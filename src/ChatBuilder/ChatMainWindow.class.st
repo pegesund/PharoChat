@@ -11,7 +11,6 @@ Class {
 		'sendConversationButton',
 		'userConversationDialog',
 		'systemConversationDialog',
-		'chatMethodSelector',
 		'openPackageSelectorButton'
 	],
 	#category : 'ChatBuilder-UI',
@@ -85,55 +84,63 @@ ChatMainWindow >> getSelectedMethods [
     ^ self application savedMethods
 ]
 
-{ #category : 'ui' }
-ChatMainWindow >> getSelectedMethodsText [
-    "This is a placeholder. Implement the actual logic to get selected methods"
-    ^ 'Selected methods will be shown here'
-]
-
 { #category : 'initialization' }
 ChatMainWindow >> initializePresenters [
 	"Initialize the main window components"
-openClassSelectorButton := self newButton
-   label: 'Open Class Selector';
-   action: [ self openClassSelector ].
 
-openUserConversationButton := self newButton
-   label: 'Open User Conversation';
-   action: [ self openUserConversation ].
+	openClassSelectorButton := self newButton
+		                           label: 'Select Class';
+		                           action: [ self openClassSelector ].
+	openClassSelectorButton application: self application.	
 
-openSystemConversationButton := self newButton
-   label: 'Open System Conversation';
-   action: [ self openSystemConversation ].
+	openPackageSelectorButton := self newButton
+		                             label: 'Open Package Selector';
+		                             action: [ self openPackageSelector ].
 
-openPackageSelectorButton := self newButton
-   label: 'Open Package Selector';
-   action: [ self openPackageSelector ].
+	sendConversationButton := self newButton
+		                          label: 'Send Conversation';
+		                          action: [ self openSendConversationDialog ].
 
-sendConversationButton := self newButton
-   label: 'Send Conversation';
-   action: [ self openSendConversationDialog ].
+	openUserConversationButton := self newButton
+		                              label: 'Open User Conversation';
+		                              action: [ self openUserConversation ].
 
-"Initialize dialog instances"
-userConversationDialog := nil.
-systemConversationDialog := nil.
+
+	openSystemConversationButton := self newButton
+		                                label: 'Open System Conversation';
+		                                action: [
+			                                self openSystemConversation ].
+
+
+	"Initialize dialog instances"
+	userConversationDialog := nil.
+	systemConversationDialog := nil.
+
+	^ SpBoxLayout newVertical
+		  add: openClassSelectorButton;
+		  add: openUserConversationButton;
+		  add: openSystemConversationButton;
+		  add: openPackageSelectorButton;
+		  add: sendConversationButton;
+		  yourself
 ]
 
 { #category : 'ui' }
 ChatMainWindow >> openClassSelector [
-    chatMethodSelector := ChatMethodSelector new.
-    chatMethodSelector application: self application.
-    chatMethodSelector open
+
+	| dialog |
+	dialog := ChatClassSelector new application: self application.
+
+	dialog 	open.
+
 ]
 
 { #category : 'ui' }
 ChatMainWindow >> openPackageSelector [
 	"Opens the new package selector dialog"
-
-	| dialog |
-	dialog := ChatPackageSelector new
+	ChatPackageSelector new
 		          application: self application;
-		          open.
+		          open
 ]
 
 { #category : 'ui' }

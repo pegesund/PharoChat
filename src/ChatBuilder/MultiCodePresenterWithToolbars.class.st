@@ -160,6 +160,7 @@ MultiCodePresenterWithToolbars >> showGraphicalDiff: anEditor [
 			| sourceWithSingatureOnly |
 			sourceWithSingatureOnly := (methodInfo at: 'signature') , String cr
 			                           , (methodInfo at: 'source').
+			sourceWithSingatureOnly inspect.
 			content := (RBParser parseMethod: sourceWithSingatureOnly )
 				           formattedCode ]
 				on: Exception

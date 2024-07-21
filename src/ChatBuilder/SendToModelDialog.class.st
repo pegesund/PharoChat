@@ -122,6 +122,5 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 		codePresenter textAt: i put: (each at: 'source') ].
  ].
 	win := codePresenter open.
-	win title: 'Suggested source code'.
 	^ #ok
 ]

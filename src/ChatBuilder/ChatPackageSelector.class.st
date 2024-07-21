@@ -31,7 +31,9 @@ ChatPackageSelector >> defaultLayout [
 ChatPackageSelector >> initializePresenters [
 	"Initialize the GUI components"
 
+	"Create and configure the package list presenter"
 	packageList := self newList.
+	"Create the package search input presenter"
 	packageSearchInput := self newTextInput .
 	packageSearchInput whenTextChangedDo: [ self updatePackageList ].
 	packageList

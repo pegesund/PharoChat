@@ -13,6 +13,34 @@ Class {
 	#tag : 'UI'
 }
 
+{ #category : 'layout' }
+ChatPackageSelector >> defaultLayout [
+	"Define the layout of the GUI"
+
+	^ SpBoxLayout newVertical
+		  add: packageSearchInput;
+		  add: packageList;
+		  add: (SpButtonPresenter new
+			   label: 'Select Package';
+			   action: [ self selectPackage ];
+			   yourself);
+		  yourself
+]
+
+{ #category : 'initialization' }
+ChatPackageSelector >> initializePresenters [
+	"Initialize the GUI components"
+
+	packageList := self newList.
+	packageSearchInput := self newTextInput .
+	packageSearchInput whenTextChangedDo: [ self updatePackageList ].
+	packageList
+		items: (self packageOrganizer packages sorted: [:a :b | a name <= b name]);
+		display: [:package | package name];
+		whenSelectionChangedDo: [:selection |
+			selection selectedItem ifNotNil: [:package | self application currentPackage: package name. self selectPackage ] ].
+]
+
 { #category : 'state' }
 ChatPackageSelector >> packageSelected: aPackage [
 	"Handles the package selection and updates the current package in the application"

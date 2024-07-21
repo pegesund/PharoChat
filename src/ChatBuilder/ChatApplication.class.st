@@ -36,12 +36,14 @@ ChatApplication >> concatenateInfoForAPI [
 		       ifNil: [ 'NopacageSpecified' ]
 		       ifNotNil: [ currentPackage ].
 	stream := WriteStream on: String new.
-	
+
 	userConversation ifNil: [ ^ '' ].
-	stream nextPutAll: userConversation; cr.
+	stream
+		nextPutAll: userConversation;
+		cr.
 	stream
 		nextPutAll:
-			'Unless specified otherwise create all new classes and methods in this package: '
+			'Important: Unless specified otherwise create all new classes and methods in this package: '
 			, pkg;
 		cr;
 		cr.
@@ -70,7 +72,7 @@ ChatApplication >> currentPackage: anObject [
 ChatApplication >> initialize [
 
 	super initialize.
-	currentPackage := 'ChatPetter'.
+	currentPackage := 'ChatBuilder'.
 	savedMethods := OrderedCollection new.
 	self systemConversation: '
 		
@@ -166,7 +168,7 @@ ChatApplication >> sendToChatModel: modelName [
 
 	res := model
 		       sendModel: modelName
-		       user: self userConversation 
+		       user: self concatenateInfoForAPI 
 		       system: systemConversation.
 	res inspect.
 	^ res

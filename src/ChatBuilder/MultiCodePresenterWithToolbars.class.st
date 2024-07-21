@@ -15,48 +15,45 @@ Class {
 
 { #category : 'adding' }
 MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar: isUpdate [
-
 	| newEditor newToolbar pair statusLabel |
-	newEditor := self instantiate: SpCodePresenter.
-	newEditor beForScripting.
-	statusLabel := self newLabel label: 'Ready'.
-	newToolbar := self newToolbar
-		              addItem: (SpToolbarButtonPresenter new
-				               label: 'Compile';
-				               icon: (self iconNamed: #smallSave);
-				               help: 'Compile';
-				               action: [ self chatCompileEditor: newEditor ];
-				               yourself);
-		              addItem: (SpToolbarButtonPresenter new
-				               label: 'Open';
-				               icon: (self iconNamed: #openIcon);
-				               help: 'Open';
-				               action: [ self loadEditor: newEditor ];
-				               yourself).
+newEditor := self instantiate: SpCodePresenter.
+newEditor beForScripting.
+statusLabel := self newLabel label: 'Ready'.
+newToolbar := self newToolbar
+addItem: (SpToolbarButtonPresenter new
+label: 'Compile';
+icon: (self iconNamed: #smallSave);
+help: 'Compile';
+action: [ self chatCompileEditor: newEditor ];
+yourself);
+addItem: (SpToolbarButtonPresenter new
+label: 'Open';
+icon: (self iconNamed: #openIcon);
+help: 'Open';
+action: [ self loadEditor: newEditor ];
+yourself).
 
-	isUpdate ifTrue: [
-		newToolbar addItem: (SpToolbarButtonPresenter new
-				 label: 'Diff';
-				 icon: (self iconNamed: #openIcon);
-				 help: 'Diff';
-				 action: [  ];
-				 yourself) ].
-	newToolbar
-		addItem: (SpToolbarButtonPresenter new
-				 label: 'Status:';
-				 help: 'Status';
-				 yourself);
-		addItem: (SpToolbarButtonPresenter new
-				 label: 'Ready';
-				 help: 'Current status';
-				 yourself).
-						
-	pair := {
-		        newToolbar.
-		        newEditor.
-		        statusLabel }.
-	codeEditorPairs add: pair.
-	self updateLayout
+isUpdate ifTrue: [
+newToolbar addItem: (SpToolbarButtonPresenter new
+label: 'Diff';
+icon: (self iconNamed: #diffIcon);  "Placeholder for the diff icon"
+help: 'Diff';
+action: [ self showGraphicalDiff: newEditor ];
+yourself) ].
+
+newToolbar
+addItem: (SpToolbarButtonPresenter new
+label: 'Status:';
+help: 'Status';
+yourself);
+addItem: (SpToolbarButtonPresenter new
+label: 'Ready';
+help: 'Current status';
+yourself).
+
+pair := { newToolbar. newEditor. statusLabel }.
+codeEditorPairs add: pair.
+self updateLayout.
 ]
 
 { #category : 'compiling' }
@@ -130,6 +127,53 @@ MultiCodePresenterWithToolbars >> loadEditor: anEditor [
 MultiCodePresenterWithToolbars >> setExplanationText: text [
 
 explanationEditor text: text.
+]
+
+{ #category : 'UI' }
+MultiCodePresenterWithToolbars >> showGraphicalDiff: anEditor [
+	"Shows a graphical diff between the text in the editor and the current source"
+
+	| content currentSource methodInfo signatureAsSymbol theClassName diffPresenter |
+	content := anEditor text.
+	"Check if content is a method or a class using ChatBot"
+	currentSource := 'Not able to find currentSource..'.
+	(ChatBot chatDetectIfClassOrMethod: content)
+		ifTrue: [ "It is a class"
+			theClassName := ChatBot chatExtractClassName: content.
+			currentSource := (Smalltalk at: theClassName asSymbol) sourceCode ]
+		ifFalse: [ "It is a method"
+			methodInfo := ChatBot chatExtractMethodInfo: content.
+
+			signatureAsSymbol := ChatBot chatStringToMethodSymbol:
+				                     (methodInfo at: 'signature').
+			currentSource := (Smalltalk at:
+				                  (methodInfo at: 'className') asSymbol)
+				                 sourceCodeAt: signatureAsSymbol.
+
+			currentSource := (RBParser parseMethod: currentSource)
+				                 formattedCode.
+			currentSource := (methodInfo at: 'className') , ' >> '
+			                 , currentSource.
+
+			[
+			| sourceWithSingatureOnly |
+			sourceWithSingatureOnly := (methodInfo at: 'signature') , String cr
+			                           , (methodInfo at: 'source').
+			content := (RBParser parseMethod: sourceWithSingatureOnly)
+				           formattedCode ]
+				on: Exception
+				do: [ :e | e signal ].
+			content := (methodInfo at: 'className') , ' >> ' , content ].
+
+	diffPresenter := SpDiffPresenter new.
+	diffPresenter extent: 500 @ 500. "TODO: Why does not this work"
+	diffPresenter
+		leftLabel: 'Current';
+		leftText: currentSource;
+		rightLabel: 'Suggestion';
+		rightText: content.
+	diffPresenter open.
+	diffPresenter window title: 'Diffences'; resize: 1300@500.
 ]
 
 { #category : 'accessing' }

@@ -41,7 +41,7 @@ ManifestChatBuilder class >> ruleCollectionProtocolRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleEmptyExceptionHandlerRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#ChatMethodSelector #getChangedMethodsFor: #false)) #'2024-07-20T13:05:45.76585+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ChatMethodSelector #getChangedMethodsFor: #false)) #'2024-07-20T13:05:45.76585+02:00') #(#(#RGMethodDefinition #(#MultiCodePresenterWithToolbars #showGraphicalDiff: #false)) #'2024-07-21T14:47:30.076152+02:00') )
 ]
 
 { #category : 'code-critics' }

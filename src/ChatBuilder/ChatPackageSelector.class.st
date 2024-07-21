@@ -50,12 +50,13 @@ ChatPackageSelector >> packageSelected: aPackage [
 { #category : 'UI' }
 ChatPackageSelector >> selectPackage [
 	"Action to handle the package selection button click event"
+
 	| selectedPackage |
 	selectedPackage := packageList selection selectedItem.
 	selectedPackage ifNotNil: [
 		self application currentPackage: selectedPackage name.
 		self packageSelected: selectedPackage.
-		self window close ].
+		self window close ]
 ]
 
 { #category : 'TOREMOVE' }

@@ -232,52 +232,6 @@ ChatBot classSide >> chatStringToMethodSymbol: aString [
     ^ selector asSymbol
 ]
 
-{ #category : 'tests' }
-ChatBot classSide >> testAddMethod [
-	"comment stating purpose of class-side method"
-
-	"scope: class-variables  &  class-instance-variables"
-| sourceCode builder newClass targetPackage className ast |
-sourceCode := 'Object << #MyClassPetter7
-    "Add comment here also.."
-    layout: FixedLayout;
-    traits: {};
-    slots: { #myVar100 . #myVar200 };
-    sharedVariables: { #myShare1 };
-    sharedPools: {};
-    tag: '''';
-    package: ''ChatBuilder'''.
-ast := CDFluidClassDefinitionParser parse: sourceCode.
-
-
-builder := ShiftClassBuilder new
-    buildEnvironment: self class environment;
-    buildFromAST: ast.
-newClass := builder build.
-newClass comment: 'Petter was here'.
-
-className := newClass name.
-
-"Check if class already exists and remove it"
-(Smalltalk globals includesKey: className) ifTrue: [
-    | existingClass |
-    existingClass := Smalltalk globals at: className.
-    existingClass package removeClassNamed: className.
-    Smalltalk globals removeKey: className.
-].
-
-"Register the class in the global namespace"
-Smalltalk globals at: newClass name put: newClass.
-
-"Get the target package"
-targetPackage := builder package.
-
-"Move the class to the correct package"
-newClass package: targetPackage.
-
-^ newClass
-]
-
 { #category : 'sending' }
 ChatBot >> sendModel: modelName user: user system: system [
 

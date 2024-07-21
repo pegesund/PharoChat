@@ -31,41 +31,27 @@ ChatApplication >> apiContent: anObject [
 { #category : 'builder' }
 ChatApplication >> concatenateInfoForAPI [
 
-	| json methodsInfo classesInfo res |
-	methodsInfo := self savedMethods collect: [ :method |
-		               | class methodType |
-		               class := method methodClass.
-		               methodType := method isClassSide
-			                             ifTrue: [ 'class' ]
-			                             ifFalse: [ 'instance' ].
-		               { ('sourceCode'
-		                -> (String streamContents: [ :stream |
-				                 stream
-					                 nextPutAll:
-						                 class name , ' >> #' , method selector;
-					                 cr;
-					                 nextPutAll: method sourceCode ])) } asDictionary ].
-
-	classesInfo := (self savedMethods collect: [ :method |
-		                method methodClass ]) asSet collect: [ :class |
-		               {
-			               ('name' -> class name).
-			               ('definition' -> class definitionString).
-			               ('comment' -> class comment) } asDictionary ].
-
-	json := {
-		        ('methods' -> methodsInfo asArray).
-		        ('classes' -> classesInfo asArray) } asDictionary.
-
-	res := STONJSON toStringPretty: json.
-
-	"Replace '\r' with newline and '\t' with tab"
-	res := res copyReplaceAll: '\r' with: String cr.
-	res := res copyReplaceAll: '\t' with: String tab.
-
-
-
-	^ res
+	| pkg stream |
+	pkg := currentPackage
+		       ifNil: [ 'NopacageSpecified' ]
+		       ifNotNil: [ currentPackage ].
+	stream := WriteStream on: String new.
+	
+	userConversation ifNil: [ ^ '' ].
+	stream nextPutAll: userConversation; cr.
+	stream
+		nextPutAll:
+			'Unless specified otherwise create all new classes and methods in this package: '
+			, pkg;
+		cr;
+		cr.
+	currentPackage ifNil: [ ^ stream contents ].
+	stream nextPutAll:
+		'Relevant source code in current project is found here. Suggest changes in this codebase also if needed to formulate the reply. Current source: '.
+	stream
+		nextPutAll: (ChatBot chatSourceCodeForPackage: currentPackage);
+		cr.
+	^ stream contents
 ]
 
 { #category : 'accessing' }
@@ -84,6 +70,7 @@ ChatApplication >> currentPackage: anObject [
 ChatApplication >> initialize [
 
 	super initialize.
+	currentPackage := 'ChatPetter'.
 	savedMethods := OrderedCollection new.
 	self systemConversation: '
 		
@@ -131,7 +118,7 @@ Correct json on result is like this:
 									sharedVariables: {};
 									sharedPools: {};
 									tag: '''' ;
-									package: ''ChatBuilder''",
+									package: ''SpecifiedPackage''",
 				  "createOrUpdate" = "create"
 				 }
 				 ]
@@ -147,16 +134,14 @@ Object << #MyClass
 	sharedVariables: {};
 	sharedPools: {};
 	tag: '''' ;
-	package: ''ChatBuilder''		
+	package: ''SpecifiedPackage''		
 		
 		If not asked to create code just answer like this:
 		
 		{ "result" = "here comes the content.." }
 		
 While creating classes and/or methods, make sure that classes which are bases for other new classes comes first in listing. Same goes for methods: Methods which are used by other new methods should be listed first.
-
-Create new classes and methods in this package, unless specified otherwise: { 1 }		
-	
+		
 	'
 ]
 
@@ -173,24 +158,17 @@ ChatApplication >> savedMethods: aCollection [
 { #category : 'chat' }
 ChatApplication >> sendToChatModel: modelName [
 
-	| model res userContent |
+	| model res |
 	model := nil.
 	modelName = 'gpt-3.5-turbo' ifTrue: [ model := OpenAi new ].
 	modelName = 'gpt-4o' ifTrue: [ model := OpenAi new ].
 	modelName = 'gpt-4-turbo' ifTrue: [ model := OpenAi new ].
 
-	userContent := WriteStream on: String new.
-	userContent
-		nextPutAll: userConversation;
-		cr;
-		cr.
-	userContent nextPutAll: self concatenateInfoForAPI.
-
 	res := model
 		       sendModel: modelName
-		       user: userContent contents
+		       user: self userConversation 
 		       system: systemConversation.
-	res inspect.	
+	res inspect.
 	^ res
 ]
 
@@ -206,7 +184,10 @@ ChatApplication >> systemConversation: aString [
 
 { #category : 'accessing' }
 ChatApplication >> userConversation [
-    ^ userConversation
+
+
+^ userConversation .
+
 ]
 
 { #category : 'accessing' }

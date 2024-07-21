@@ -54,7 +54,7 @@ SendToModelDialog >> initializePresenters [
 			 height: 200;
 			 add: 'User Conversation' expand: false;
 			 add: (self newText
-					  text: (application userConversation ifNil: [ '' ]);
+					  text: (application concatenateInfoForAPI );
 					  enabled: false;
 					  beNotEditable)
 			 height: 200;
@@ -76,7 +76,7 @@ SendToModelDialog >> initializePresenters [
 			 height: 30;
 			 add: (self newButton
 					  label: 'Send';
-					  action: [ 
+					  action: [
 						  | codeAsJson |
 						  codeAsJson := self application sendToChatModel:
 								                modelSelector selectedItem.
@@ -95,9 +95,9 @@ SendToModelDialog >> initializeWindow: aWindowPresenter [
 
 { #category : 'codeUI' }
 SendToModelDialog >> openCodeWindow: codeAsJson [
-
+	"Opens window which suggested code changes from api"
 	| codePresenter win methods theClasses i |
-	(codeAsJson = #done) ifTrue: [ ^ #done ].
+	codeAsJson = #done ifTrue: [ ^ #done ].
 	codePresenter := MultiCodePresenterWithToolbars new.
 	codePresenter setExplanationText:
 		((codeAsJson at: 'source') at: 'explanation').

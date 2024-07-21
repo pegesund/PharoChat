@@ -126,3 +126,9 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 	win := codePresenter open.
 	^ #ok
 ]
+
+{ #category : 'codeUI' }
+SendToModelDialog >> openUserConversationDialog [
+	"Handle the user conversation text click event to open the 'Open User conversation' dialog."
+    self application openUserConversation
+]

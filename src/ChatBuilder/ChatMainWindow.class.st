@@ -11,7 +11,8 @@ Class {
 		'sendConversationButton',
 		'userConversationDialog',
 		'systemConversationDialog',
-		'openPackageSelectorButton'
+		'openPackageSelectorButton',
+		'includePackageCodeCheckbox'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -70,9 +71,11 @@ ChatMainWindow class >> open [
 
 { #category : 'layout' }
 ChatMainWindow >> defaultLayout [
+
 	application mainWindow: self.
 
 	^ SpBoxLayout newVertical
+	     add: includePackageCodeCheckbox ;
 		  add: openClassSelectorButton;
 		  add: openUserConversationButton;
 		  add: openSystemConversationButton;
@@ -88,7 +91,9 @@ ChatMainWindow >> getSelectedMethods [
 
 { #category : 'initialization' }
 ChatMainWindow >> initializePresenters [
-	"Initialize the main window components"
+	"Initialize the main window components and add a checkbox"
+
+	super initializePresenters.
 
 	openClassSelectorButton := self newButton
 		                           label: 'Select Class';
@@ -107,17 +112,23 @@ ChatMainWindow >> initializePresenters [
 		                              label: 'Open User Conversation';
 		                              action: [ self openUserConversation ].
 
-
 	openSystemConversationButton := self newButton
 		                                label: 'Open System Conversation';
 		                                action: [
 			                                self openSystemConversation ].
 
+	includePackageCodeCheckbox := SpCheckBoxPresenter new
+		                              label: 'Include package code';
+		                              state: false;
+		                              whenActivatedDo: [
+			                              self application includePackageCode: true ];
+		                              whenDeactivatedDo: [
+			                              self application includePackageCode: false ].
+
 
 	"Initialize dialog instances"
 	userConversationDialog := nil.
 	systemConversationDialog := nil.
-	
 
 	^ SpBoxLayout newVertical
 		  add: openClassSelectorButton;
@@ -125,6 +136,7 @@ ChatMainWindow >> initializePresenters [
 		  add: openSystemConversationButton;
 		  add: openPackageSelectorButton;
 		  add: sendConversationButton;
+		  add: includePackageCodeCheckbox;
 		  yourself
 ]
 

@@ -20,6 +20,18 @@ Class {
 }
 
 { #category : 'accessing' }
+ChatApplication >> allAndSelectedClassess [
+"Shows all and selected class methods"
+
+|allClasses|
+
+allClasses := currentPackage asPackage definedClasses collect: [
+			 :class | class name ].
+		
+^ { selectedClasses . (allClasses difference: selectedClasses ) }
+]
+
+{ #category : 'accessing' }
 ChatApplication >> apiContent [
 
 	^ apiContent
@@ -89,6 +101,7 @@ ChatApplication >> initialize [
 	super initialize.
 	currentPackage := 'ChatBuilder'.
 	savedMethods := OrderedCollection new.
+	selectedClasses := Set new.
 	self includePackageCode: false.
 	self systemConversation: '
 		

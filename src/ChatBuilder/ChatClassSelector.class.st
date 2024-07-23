@@ -17,15 +17,20 @@ Class {
 ChatClassSelector >> defaultLayout [
 	"Define the layout of the GUI"
 
-	classSearchPresenter sourceItems:
-		(self application currentPackage asPackage definedClasses collect: [
-			 :class | class name ]).
+	| selectionClasses |
+	selectionClasses := self application allAndSelectedClassess.
+
+	classSearchPresenter
+		sourceItems: selectionClasses second;
+		defaultChosenItems: selectionClasses first.
 
 	^ SpBoxLayout newVertical
 		  add: classSearchPresenter;
 		  add: (SpButtonPresenter new
 				   label: 'Done';
-				   action: [ self selectClasses. self window close ];
+				   action: [
+					   self selectClasses.
+					   self window close ];
 				   yourself);
 		  yourself
 ]

@@ -9,7 +9,14 @@ Class {
 		'textPresenter',
 		'classListPresenter',
 		'packageListPresenter',
-		'methodSelectButton'
+		'methodSelectButton',
+		'classSelectButton',
+		'packageSelectButton',
+		'selectButtons',
+		'completePane',
+		'doneButton',
+		'removeButton',
+		'selectedAllTable'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -58,30 +65,96 @@ ChatMethodSelector >> connectPresenters [
 { #category : 'layout' }
 ChatMethodSelector >> defaultLayout [
 
+	| leftSide rightSide downRight |
+	selectButtons
+		add: packageSelectButton;
+		add: classSelectButton;
+		add: methodSelectButton.
 
 	methodSelectButton label: 'Add method'.
-	^ (SpBoxLayout newVertical spacing: 5)
-		  add: (SpBoxLayout newVertical
-				   spacing: 5;
-				   add: packageListPresenter;
-				   yourself);
-		  add: (SpPanedLayout newLeftToRight
-				   add: classListPresenter;
-				   add: methodListPresenter;
-				   yourself);
-		  add: (SpBoxLayout newHorizontal
-				   spacing: 5;
-				   add: textPresenter;
-				   add: methodSelectButton height: 40;
-				   yourself);
-		  yourself.
+	classSelectButton label: 'Add class'.
+	packageSelectButton label: 'Add package'.
+	doneButton label: 'Done'.
+	removeButton label: 'Remove'.
 
+	downRight := (SpBoxLayout newHorizontal spacing: 5) add: removeButton ; add: doneButton ; yourself .
+
+	leftSide := (SpBoxLayout newVertical spacing: 5)
+		            add: (SpBoxLayout newVertical
+				             spacing: 5;
+				             add: packageListPresenter;
+				             yourself);
+		            add: (SpPanedLayout newLeftToRight
+				             add: classListPresenter;
+				             add: methodListPresenter;
+				             yourself);
+		            add: (SpBoxLayout newHorizontal
+				             spacing: 5;
+				             add: textPresenter;
+				             add: selectButtons height: 40;
+				             yourself);
+		            yourself.
+
+	rightSide := (SpBoxLayout newVertical spacing: 2)
+		             add: selectedAllTable;
+		             add: downRight height: 40;
+		             yourself.
+
+	completePane := (SpBoxLayout newHorizontal spacing: 2)
+		                add: leftSide;
+		                add: rightSide;
+		                yourself.
+
+	^ completePane
+]
+
+{ #category : 'initialization' }
+ChatMethodSelector >> initializeAddButtons [
+
+	packageSelectButton action: [
+		| s |
+		s := ChatSelectedSource new.
+		s selectedPackageName: packageListPresenter selectedItem.
+		self application addSelectedSource: s.
+		self refreshSelectedItems ].
+
+	classSelectButton action: [
+		| s |
+		s := ChatSelectedSource new.
+		s selectedPackageName: packageListPresenter selectedItem.
+		s selectedClassName: classListPresenter selectedItem.
+		self application addSelectedSource: s.
+		self refreshSelectedItems ].
+
+	methodSelectButton action: [
+		| s |
+		s := ChatSelectedSource new.
+		s selectedMethodName: methodListPresenter selectedItem.
+		s selectedClassName: classListPresenter selectedItem.
+		s selectedPackageName: packageListPresenter selectedItem.
+		self application addSelectedSource: s.
+		self refreshSelectedItems ].
+	
+   removeButton action:  [ 
+
+	     "selectedAllTable selectedIndex "
+	 ]
 ]
 
 { #category : 'initialization' }
 ChatMethodSelector >> initializePresenters [
 
 	methodSelectButton := self newButton.
+	classSelectButton := self newButton.
+	packageSelectButton := self newButton.
+	
+
+	doneButton := self newButton.
+	removeButton := self newButton.
+
+	selectButtons := SpBoxLayout newVertical spacing: 5.
+	selectedAllTable := self newTable.
+
 	packageListPresenter := self newFilteringList.
 	self packages:
 		((self packageOrganizer packages sorted: [ :a :b | a name <= b name ])
@@ -97,7 +170,9 @@ ChatMethodSelector >> initializePresenters [
 		add: classListPresenter;
 		add: methodListPresenter;
 		add: textPresenter;
-		add: methodSelectButton
+		add: methodSelectButton.
+	self initializeAddButtons .		
+	
 ]
 
 { #category : 'api' }
@@ -106,4 +181,15 @@ ChatMethodSelector >> packages: aList [
 	packageListPresenter items = aList ifTrue: [ ^ self ].
 
 	packageListPresenter items: aList
+]
+
+{ #category : 'ui' }
+ChatMethodSelector >> refreshSelectedItems [
+
+	| names |
+	names := self application selectedSource collect: [ :item |
+		         item name ].
+
+
+	selectedAllTable items: names
 ]

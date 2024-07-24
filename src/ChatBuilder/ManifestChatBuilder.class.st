@@ -31,6 +31,13 @@ ManifestChatBuilder class >> ruleCodeCruftLeftInMethodsRuleV1FalsePositive [
 ]
 
 { #category : 'code-critics' }
+ManifestChatBuilder class >> ruleCollectionMessagesToExternalObjectRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#ChatMethodSelector #defaultLayout #false)) #'2024-07-24T11:04:21.924161+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestChatBuilder class >> ruleCollectionProtocolRuleV1FalsePositive [
 
 	<ignoreForCoverage>
@@ -69,7 +76,7 @@ ManifestChatBuilder class >> ruleLongMethodsRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#ChatMainWindow #openSystemConversation #false)) #'2024-06-29T20:32:28.30194+02:00') #(#(#RGMethodDefinition #(#ChatMainWindow #openUserConversation #false)) #'2024-07-07T13:55:25.126206+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ChatMainWindow #openSystemConversation #false)) #'2024-06-29T20:32:28.30194+02:00') #(#(#RGMethodDefinition #(#ChatMainWindow #openUserConversation #false)) #'2024-07-07T13:55:25.126206+02:00') #(#(#RGMethodDefinition #(#ChatMethodSelector #connectPresenters #false)) #'2024-07-24T10:38:51.927327+02:00') )
 ]
 
 { #category : 'code-critics' }

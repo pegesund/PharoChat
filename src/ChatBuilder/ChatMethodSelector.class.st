@@ -134,11 +134,13 @@ ChatMethodSelector >> initializeAddButtons [
 		s selectedPackageName: packageListPresenter selectedItem.
 		self application addSelectedSource: s.
 		self refreshSelectedItems ].
-	
-   removeButton action:  [ 
 
-	     "selectedAllTable selectedIndex "
-	 ]
+	removeButton action: [
+		| s |
+		s := selectedAllTable selectedItem.
+		self application removeSelectedSource: s.
+		self refreshSelectedItems .
+		 ]
 ]
 
 { #category : 'initialization' }

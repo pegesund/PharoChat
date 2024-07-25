@@ -201,6 +201,15 @@ ChatApplication >> mainWindow: anObject [
 	mainWindow := anObject
 ]
 
+{ #category : 'removing' }
+ChatApplication >> removeSelectedSource: item [
+
+	| names index |
+	names := selectedSource collect: [ :i | i asString ].
+	index := names indexOf: item asString.
+	selectedSource removeIndex: index
+]
+
 { #category : 'accessing' }
 ChatApplication >> savedMethods [
     ^ savedMethods

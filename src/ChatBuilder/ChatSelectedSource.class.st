@@ -16,6 +16,14 @@ Class {
 	#tag : 'chat'
 }
 
+{ #category : 'converting' }
+ChatSelectedSource >> asString [
+
+	selectedMethodName ifNotNil: [ ^ selectedMethodName name ].
+	selectedClassName ifNotNil: [ ^ selectedClassName asString ].
+	^ ('#' , selectedPackageName) asString.
+]
+
 { #category : 'accessing' }
 ChatSelectedSource >> name [
 

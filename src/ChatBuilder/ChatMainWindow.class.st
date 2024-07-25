@@ -101,8 +101,10 @@ ChatMainWindow >> initializePresenters [
 		                   label: 'Add source';
 		                   action: [
 			                   | w |
-			                   w := ChatMethodSelector new application: self application.
-			                   w open ].
+			                   w := ChatMethodSelector new application:
+					                        self application.
+			                   w open.
+			                   w window resize: 1000 @ 600 ].
 
 	openClassSelectorButton := self newButton
 		                           label: 'Select Class';

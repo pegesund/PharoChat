@@ -139,8 +139,11 @@ ChatMethodSelector >> initializeAddButtons [
 		| s |
 		s := selectedAllTable selectedItem.
 		self application removeSelectedSource: s.
-		self refreshSelectedItems .
-		 ]
+		self refreshSelectedItems ].
+	
+   doneButton action: [ 
+		self window close.
+	 ]
 ]
 
 { #category : 'initialization' }

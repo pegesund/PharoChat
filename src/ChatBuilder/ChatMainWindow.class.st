@@ -104,6 +104,7 @@ ChatMainWindow >> initializePresenters [
 			                   w := ChatMethodSelector new application:
 					                        self application.
 			                   w open.
+											w refreshSelectedItems .
 			                   w window resize: 1000 @ 600 ].
 
 	openClassSelectorButton := self newButton

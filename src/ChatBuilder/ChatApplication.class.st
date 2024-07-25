@@ -12,7 +12,6 @@ Class {
 		'currentPackage',
 		'selectedClasses',
 		'mainWindow',
-		'includePackageCode',
 		'selectedSource'
 	],
 	#category : 'ChatBuilder-chat',
@@ -95,18 +94,6 @@ ChatApplication >> currentPackage: anObject [
 	currentPackage := anObject
 ]
 
-{ #category : 'chat' }
-ChatApplication >> includePackageCode [
-	"Returns the value of includePackageCode"
-	^ includePackageCode.
-]
-
-{ #category : 'chat' }
-ChatApplication >> includePackageCode: anObject [
-	"Sets the value of includePackageCode"
-	includePackageCode := anObject.
-]
-
 { #category : 'initialization' }
 ChatApplication >> initialize [
 
@@ -114,7 +101,6 @@ ChatApplication >> initialize [
 	currentPackage := 'ChatBuilder'.
 	savedMethods := OrderedCollection new.
 	selectedClasses := Set new.
-	self includePackageCode: false.
 	selectedSource := OrderedCollection new.
 	self systemConversation: '
 		
@@ -268,11 +254,6 @@ ChatApplication >> systemConversation [
 { #category : 'accessing' }
 ChatApplication >> systemConversation: aString [
     systemConversation := aString
-]
-
-{ #category : 'chat' }
-ChatApplication >> toggleIncludePackageCode [
- includePackageCode := includePackageCode not.
 ]
 
 { #category : 'accessing' }

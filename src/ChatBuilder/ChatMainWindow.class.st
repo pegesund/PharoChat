@@ -12,7 +12,6 @@ Class {
 		'userConversationDialog',
 		'systemConversationDialog',
 		'openPackageSelectorButton',
-		'includePackageCodeCheckbox',
 		'addSourceButton'
 	],
 	#category : 'ChatBuilder-UI',
@@ -76,8 +75,7 @@ ChatMainWindow >> defaultLayout [
 	application mainWindow: self.
 
 	^ SpBoxLayout newVertical
-	     add: addSourceButton ;
-		  add: includePackageCodeCheckbox;
+		  add: addSourceButton;
 		  add: openClassSelectorButton;
 		  add: openUserConversationButton;
 		  add: openSystemConversationButton;
@@ -104,7 +102,7 @@ ChatMainWindow >> initializePresenters [
 			                   w := ChatMethodSelector new application:
 					                        self application.
 			                   w open.
-											w refreshSelectedItems .
+			                   w refreshSelectedItems.
 			                   w window resize: 1000 @ 600 ].
 
 	openClassSelectorButton := self newButton
@@ -128,15 +126,7 @@ ChatMainWindow >> initializePresenters [
 		                                action: [
 			                                self openSystemConversation ].
 
-	includePackageCodeCheckbox := SpCheckBoxPresenter new
-		                              label: 'Include package code';
-		                              state: false;
-		                              whenActivatedDo: [
-			                              self application includePackageCode:
-					                              true ];
-		                              whenDeactivatedDo: [
-			                              self application includePackageCode:
-					                              false ].
+
 
 
 	"Initialize dialog instances"
@@ -149,7 +139,6 @@ ChatMainWindow >> initializePresenters [
 		  add: openSystemConversationButton;
 		  add: openPackageSelectorButton;
 		  add: sendConversationButton;
-		  add: includePackageCodeCheckbox;
 		  yourself
 ]
 

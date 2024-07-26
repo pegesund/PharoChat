@@ -10,6 +10,13 @@ Class {
 }
 
 { #category : 'code-critics' }
+ManifestChatBuilder class >> ruleBadMessageRule2V1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethodAST: #true)) #'2024-07-26T15:07:21.357291+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestChatBuilder class >> ruleCascadedNextPutAllsRuleV1FalsePositive [
 
 	<ignoreForCoverage>
@@ -41,7 +48,7 @@ ManifestChatBuilder class >> ruleCollectionMessagesToExternalObjectRuleV1FalsePo
 ManifestChatBuilder class >> ruleCollectionProtocolRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#ChatApplication #concatenateInfoForAPI #false)) #'2024-07-07T10:34:10.489976+02:00') #(#(#RGMethodDefinition #(#MultiCodePresenterWithToolbars #updateLayout #false)) #'2024-07-10T11:37:34.889695+02:00') #(#(#RGMethodDefinition #(#ChatMethodSelector #getChangedMethodsFor: #false)) #'2024-07-20T13:05:15.496715+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ChatApplication #concatenateInfoForAPI #false)) #'2024-07-07T10:34:10.489976+02:00') #(#(#RGMethodDefinition #(#MultiCodePresenterWithToolbars #updateLayout #false)) #'2024-07-10T11:37:34.889695+02:00') #(#(#RGMethodDefinition #(#ChatMethodSelector #getChangedMethodsFor: #false)) #'2024-07-20T13:05:15.496715+02:00') #(#(#RGMethodDefinition #(#ChatCodeTransformer #getAllMethodsAndClassesFromTempPackage #false)) #'2024-07-26T13:08:44.166784+02:00') #(#(#RGMethodDefinition #(#ChatCodeTransformer #getAllMethodsAndClassesFromTempPackage: #false)) #'2024-07-26T13:51:29.56473+02:00') #(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethod: #true)) #'2024-07-26T14:38:15.159315+02:00') )
 ]
 
 { #category : 'code-critics' }
@@ -73,6 +80,13 @@ ManifestChatBuilder class >> ruleLongMethodsRuleV1FalsePositive [
 ]
 
 { #category : 'code-critics' }
+ManifestChatBuilder class >> ruleNobodyShouldSendMethodDictV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#ChatCodeTransformer #getAllMethodsAndClassesFromTempPackage #false)) #'2024-07-26T13:08:21.090427+02:00') #(#(#RGMethodDefinition #(#ChatCodeTransformer #getAllMethodsAndClassesFromTempPackage: #false)) #'2024-07-26T13:51:55.751364+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 
 	<ignoreForCoverage>
@@ -83,5 +97,5 @@ ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleStringConcatenationRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:01:42.737775+02:00') #(#(#RGMethodDefinition #(#ChatApplication #concatenateInfoForAPI #false)) #'2024-06-30T20:48:40.58333+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:01:42.737775+02:00') #(#(#RGMethodDefinition #(#ChatApplication #concatenateInfoForAPI #false)) #'2024-06-30T20:48:40.58333+02:00') #(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethod: #true)) #'2024-07-26T14:37:20.605099+02:00') #(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethod: #true)) #'2024-07-26T14:37:59.253336+02:00') )
 ]

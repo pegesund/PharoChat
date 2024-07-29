@@ -123,7 +123,7 @@ ChatCodeTransformer >> application [
 { #category : 'accessing' }
 ChatCodeTransformer >> application: anObject [
 
-	application := anObject
+	application := anObject 
 ]
 
 { #category : 'transform' }

@@ -13,7 +13,7 @@ Class {
 ManifestChatBuilder class >> ruleBadMessageRule2V1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethodAST: #true)) #'2024-07-26T15:07:21.357291+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethodAST: #true)) #'2024-07-26T15:07:21.357291+02:00') #(#(#RGMethodDefinition #(#ChatCodeBuilder #collectMethodsFromTemporaryClass: #false)) #'2024-07-30T12:05:07.508569+02:00') #(#(#RGMethodDefinition #(#ChatCodeBuilder #collectMethodsFromTemporaryClass:stream: #false)) #'2024-07-30T12:10:03.266698+02:00') )
 ]
 
 { #category : 'code-critics' }

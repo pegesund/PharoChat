@@ -21,6 +21,26 @@ application := app.
 ]
 
 { #category : 'tempCollector' }
+ChatCodeBuilder >> collectMethodsFromTemporaryClass: c stream: stream [
+	"Iterates over methods in temporary package. Any method having references to the temp-objects will be changed before sending to the chatbot"
+
+	| ast literals |
+	c methods do: [ :m | "Parse the method string into an AST"
+		ast := RBParser parseMethod: m asString.
+		"Get literals from the AST"
+		literals := ast allChildren select: [ :node |
+			            node isKindOf: RBVariableNode ].
+		literals := literals select: [ :node |
+			            Smalltalk globals hasClassNamed: node name ].
+		literals do: [ :node |
+			(node name endsWith: 'Temp') ifTrue: [
+				node name: (node name copyReplaceAll: 'Temp' with: '') ] ].
+		stream
+			nextPutAll: ast formattedCode;
+			cr ]
+]
+
+{ #category : 'tempCollector' }
 ChatCodeBuilder >> collectTemporaryClasses [
 
 	| tempClasses stream currentPackage tempPackage |
@@ -37,7 +57,9 @@ ChatCodeBuilder >> collectTemporaryClasses [
 		code := self removeTempFromFirstAndLastLine: c definitionString.
 		stream
 			nextPutAll: code;
-			cr ].
+			cr.
+		self collectMethodsFromTemporaryClass: c stream: stream. 	
+			 ].
 
 	^ stream contents
 ]

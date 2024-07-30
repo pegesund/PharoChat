@@ -97,5 +97,5 @@ ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 ManifestChatBuilder class >> ruleStringConcatenationRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:01:42.737775+02:00') #(#(#RGMethodDefinition #(#ChatApplication #concatenateInfoForAPI #false)) #'2024-06-30T20:48:40.58333+02:00') #(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethod: #true)) #'2024-07-26T14:37:20.605099+02:00') #(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethod: #true)) #'2024-07-26T14:37:59.253336+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#'HBGenerator class' #generateHtmlTagMethod:attributes:isVoid:in: #true)) #'2024-06-26T13:01:42.737775+02:00') #(#(#RGMethodDefinition #(#ChatApplication #concatenateInfoForAPI #false)) #'2024-06-30T20:48:40.58333+02:00') #(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethod: #true)) #'2024-07-26T14:37:20.605099+02:00') #(#(#RGMethodDefinition #(#'ChatCodeTransformer class' #extractClassNamesFromMethod: #true)) #'2024-07-26T14:37:59.253336+02:00') #(#(#RGMethodDefinition #(#ChatCodeBuilder #collectTemporaryClasses #false)) #'2024-07-30T12:42:29.795181+02:00') )
 ]

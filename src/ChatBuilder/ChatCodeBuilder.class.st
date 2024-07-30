@@ -51,16 +51,18 @@ ChatCodeBuilder >> collectTemporaryClasses [
 	tempClasses do: [ :c |
 		| code |
 		"add class info and class code"
-		stream
-			nextPutAll: c comment;
-			cr.
 		code := self removeTempFromFirstAndLastLine: c definitionString.
-		stream
-			nextPutAll: code;
-			cr.
-		self collectMethodsFromTemporaryClass: c stream: stream. 	
-			 ].
-
+		(code includesSubstring: 'Manifest') ifFalse: [
+			stream
+				nextPutAll: '"', c comment, '"';
+				cr.
+			stream
+				nextPutAll: code;
+				cr.		
+			(c methods) ifNotEmpty: [ stream nextPutAll: 'Instance methods: '; cr ].					
+			self collectMethodsFromTemporaryClass: c stream: stream.
+			(c class methods) ifNotEmpty: [ stream nextPutAll: 'Instance methods: '; cr ].					
+			self collectMethodsFromTemporaryClass: c class stream: stream ] ].
 	^ stream contents
 ]
 

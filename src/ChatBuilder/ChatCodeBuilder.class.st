@@ -102,7 +102,8 @@ ChatCodeBuilder >> collectTemporaryClasses [
 { #category : 'copying' }
 ChatCodeBuilder >> copyClassesFromOrigToTemp [
 
-	| className tempClass |
+	| className tempClass tempPackage allChangeClasses |
+	tempPackage := (application currentPackage , 'Temp') asPackage.
 	application selectedClasses do: [ :c |
 		className := c , 'Temp'.
 		tempClass := self class environment at: className ifAbsent: [
@@ -111,7 +112,25 @@ ChatCodeBuilder >> copyClassesFromOrigToTemp [
 				                         duplicateClassWithNewName:
 				                         className asSymbol.
 			             (self class environment at: className) package:
-				             (application currentPackage , 'Temp') asPackage ] ]
+				             tempPackage ] ].
+	"Fix methods so they point to copied classes"
+	allChangeClasses := application selectedClasses asSet.
+	tempPackage classes do: [ :c |
+		c methods do: [ :m |
+			| ast literals iisUpdated |
+			"Iterate all methods and make sure it point to temp class"
+			ast := m parseTree.
+			iisUpdated := false.
+			literals := ast allChildren select: [ :node |
+				            node isKindOf: RBVariableNode ].
+			literals do: [ :node |
+				(allChangeClasses includes: node name) ifTrue: [
+					node name: node name , 'Temp'.
+					iisUpdated := true ]].
+			iisUpdated ifTrue: [
+				
+				(m isClassSide ifTrue: [ c classSide  ] ifFalse: [ c instanceSide ]) 
+				 compile: ast formattedCode ] ] ]
 ]
 
 { #category : 'initialization' }

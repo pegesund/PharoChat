@@ -7,7 +7,8 @@ Class {
 	#name : 'ChatCodeBuilder',
 	#superclass : 'Object',
 	#instVars : [
-		'application'
+		'application',
+		'exportedClasses'
 	],
 	#category : 'ChatBuilder-code',
 	#package : 'ChatBuilder',
@@ -36,8 +37,41 @@ ChatCodeBuilder >> collectMethodsFromTemporaryClass: c stream: stream [
 			(node name endsWith: 'Temp') ifTrue: [
 				node name: (node name copyReplaceAll: 'Temp' with: '') ] ].
 		stream
+			nextPutAll: (m methodClass asString copyReplaceAll: 'Temp' with: '');
+			nextPutAll: ' >> ';
 			nextPutAll: ast formattedCode;
 			cr ]
+]
+
+{ #category : 'selectedSource' }
+ChatCodeBuilder >> collectPlainClass: theClass stream: stream [
+
+	| code |
+	(exportedClasses includes: theClass name) ifTrue: [ ^ #allreadyExists ].
+	code := theClass definitionString.
+	stream
+		nextPutAll: '"' , theClass comment , '"';
+		cr.
+	stream
+		nextPutAll: code;
+		cr.
+	theClass methods do: [ :m |
+		self collectPlainMethod: m stream: stream ]
+]
+
+{ #category : 'selectedSource' }
+ChatCodeBuilder >> collectPlainMethod: method stream: stream [
+		(exportedClasses includes: (method methodClass name)) ifTrue: [ ^ #allreadyExists ].
+	stream
+		nextPutAll: method methodClass asString;
+		nextPutAll: ' >> ';
+		nextPutAll: method sourceCode;
+		cr
+]
+
+{ #category : 'selectedSource' }
+ChatCodeBuilder >> collectPlainPackage: aPackage stream: stream [
+	aPackage classes do: [ :c | self collectPlainClass: c stream: stream ].
 ]
 
 { #category : 'tempCollector' }
@@ -54,16 +88,24 @@ ChatCodeBuilder >> collectTemporaryClasses [
 		code := self removeTempFromFirstAndLastLine: c definitionString.
 		(code includesSubstring: 'Manifest') ifFalse: [
 			stream
-				nextPutAll: '"', c comment, '"';
+				nextPutAll: '"' , c comment , '"';
 				cr.
 			stream
 				nextPutAll: code;
-				cr.		
-			(c methods) ifNotEmpty: [ stream nextPutAll: 'Instance methods: '; cr ].					
+				cr.
+			exportedClasses add: (c name copyReplaceAll: 'Temp' with: '').	
 			self collectMethodsFromTemporaryClass: c stream: stream.
-			(c class methods) ifNotEmpty: [ stream nextPutAll: 'Instance methods: '; cr ].					
 			self collectMethodsFromTemporaryClass: c class stream: stream ] ].
 	^ stream contents
+]
+
+{ #category : 'initialization' }
+ChatCodeBuilder >> initialize [
+
+	super initialize.
+
+	"Keeps track of exported class, contains class names as strings"
+	exportedClasses := Set new
 ]
 
 { #category : 'removing' }

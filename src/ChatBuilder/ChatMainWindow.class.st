@@ -90,6 +90,12 @@ ChatMainWindow >> getSelectedMethods [
 ]
 
 { #category : 'initialization' }
+ChatMainWindow >> initialize [ 
+   super initialize .
+   application := ChatApplication new.
+]
+
+{ #category : 'initialization' }
 ChatMainWindow >> initializePresenters [
 	"Initialize the main window components and add a checkbox"
 

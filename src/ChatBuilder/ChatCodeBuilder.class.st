@@ -99,6 +99,21 @@ ChatCodeBuilder >> collectTemporaryClasses [
 	^ stream contents
 ]
 
+{ #category : 'copying' }
+ChatCodeBuilder >> copyClassesFromOrigToTemp [
+
+	| className tempClass |
+	application selectedClasses do: [ :c |
+		className := c , 'Temp'.
+		tempClass := self class environment at: className ifAbsent: [
+			             | newClass |
+			             newClass := (self class environment at: c)
+				                         duplicateClassWithNewName:
+				                         className asSymbol.
+			             (self class environment at: className) package:
+				             (application currentPackage , 'Temp') asPackage ] ]
+]
+
 { #category : 'initialization' }
 ChatCodeBuilder >> initialize [
 

@@ -13,6 +13,15 @@ Class {
 	#tag : 'UI'
 }
 
+{ #category : 'private' }
+ChatClassSelector >> copyClasses [
+
+	| cb |
+	cb := ChatCodeBuilder new.
+	cb application: self application.
+	cb copyClassesFromOrigToTemp .
+]
+
 { #category : 'layout' }
 ChatClassSelector >> defaultLayout [
 	"Define the layout of the GUI"
@@ -30,6 +39,7 @@ ChatClassSelector >> defaultLayout [
 				   label: 'Done';
 				   action: [
 					   self selectClasses.
+					   self copyClasses .
 					   self window close ];
 				   yourself);
 		  yourself

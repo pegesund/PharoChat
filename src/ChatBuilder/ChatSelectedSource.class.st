@@ -11,9 +11,9 @@ Class {
 		'selectedMethodName',
 		'selectedPackageName'
 	],
-	#category : 'ChatBuilder-chat',
+	#category : 'ChatBuilder-code',
 	#package : 'ChatBuilder',
-	#tag : 'chat'
+	#tag : 'code'
 }
 
 { #category : 'converting' }

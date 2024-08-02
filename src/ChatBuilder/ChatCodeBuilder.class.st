@@ -26,11 +26,8 @@ ChatCodeBuilder >> collectAllCode [
 
 	| stream |
 	stream := WriteStream on: String new.
-
 	"Collect code from temp package"
-
 	self collectTemporaryClasses: stream.
-
 
 	"Collect code from origial package"
 	application selectedSource do: [ :s |

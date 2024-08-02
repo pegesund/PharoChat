@@ -13,7 +13,7 @@ Class {
 	#tag : 'UI'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialize' }
 SendToModelDialog class >> openWithApplication: anApplication [
     | dialog window |
     dialog := self newApplication: anApplication .

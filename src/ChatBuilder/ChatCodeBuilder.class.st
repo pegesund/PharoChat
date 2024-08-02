@@ -28,7 +28,7 @@ ChatCodeBuilder >> collectAllCode [
 	stream := WriteStream on: String new.
 
 	"Collect code from temp package"
-	
+
 	self collectTemporaryClasses: stream.
 
 
@@ -36,13 +36,14 @@ ChatCodeBuilder >> collectAllCode [
 	application selectedSource do: [ :s |
 		s selectedMethodName isNil & s selectedClassName isNil
 			ifTrue: [ "It is a package"
-				self collectPlainPackage: s selectedPackageName stream: stream ]
+				self collectPlainPackage: (s selectedPackageName asPackage) stream: stream ]
 			ifFalse: [
 				s selectedMethodName
 					ifNil: [ "It is a class"
 						self collectPlainClass: s selectedClassName stream: stream ]
 					ifNotNil: [ "It is a method"
 						self collectPlainMethod: s selectedMethodName stream: stream ] ] ].
+			(stream contents) inspect.
 
 	^ stream contents
 ]

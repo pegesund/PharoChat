@@ -6,7 +6,7 @@ Class {
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'modelSelector',
-		'selectedMethods'
+		'sendCode'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -28,16 +28,15 @@ SendToModelDialog >> application [
     ^ application
 ]
 
-{ #category : 'accessing' }
-SendToModelDialog >> application: anApplication [
-    application := anApplication.
-    selectedMethods := application savedMethods .
-]
-
 { #category : 'initialization' }
 SendToModelDialog >> initialize [
-    super initialize.
-    self initializePresenters.
+
+	| ccb |
+	super initialize.
+	ccb := ChatCodeBuilder new.
+	ccb application: application. 
+	sendCode := ccb collectAllCode .
+	self initializePresenters
 ]
 
 { #category : 'initialization' }
@@ -63,14 +62,7 @@ SendToModelDialog >> initializePresenters [
 					  to: self)
 			 height: 200;
 			 add: 'Selected Methods' expand: false;
-			 add: (self newList
-					  items: selectedMethods;
-					  display: [ :method |
-						  method
-							  ifNil: [ 'No methods selected' ]
-							  ifNotNil: [
-								  method methodClass name , ' >> ' , method selector ] ];
-					  enabled: false)
+			 add: self newText
 			 height: 200;
 			 add: 'Select Model' expand: false;
 			 add: (modelSelector := self newDropList

@@ -21,7 +21,33 @@ ChatCodeBuilder >> application: app [
 application := app.
 ]
 
-{ #category : 'tempCollector' }
+{ #category : 'selectedSource' }
+ChatCodeBuilder >> collectAllCode [
+
+	| stream |
+	stream := WriteStream on: String new.
+
+	"Collect code from temp package"
+	
+	self collectTemporaryClasses: stream.
+
+
+	"Collect code from origial package"
+	application selectedSource do: [ :s |
+		s selectedMethodName isNil & s selectedClassName isNil
+			ifTrue: [ "It is a package"
+				self collectPlainPackage: s selectedPackageName stream: stream ]
+			ifFalse: [
+				s selectedMethodName
+					ifNil: [ "It is a class"
+						self collectPlainClass: s selectedClassName stream: stream ]
+					ifNotNil: [ "It is a method"
+						self collectPlainMethod: s selectedMethodName stream: stream ] ] ].
+
+	^ stream contents
+]
+
+{ #category : 'private' }
 ChatCodeBuilder >> collectMethodsFromTemporaryClass: c stream: stream [
 	"Iterates over methods in temporary package. Any method having references to the temp-objects will be changed before sending to the chatbot"
 
@@ -43,7 +69,7 @@ ChatCodeBuilder >> collectMethodsFromTemporaryClass: c stream: stream [
 			cr ]
 ]
 
-{ #category : 'selectedSource' }
+{ #category : 'private' }
 ChatCodeBuilder >> collectPlainClass: theClass stream: stream [
 
 	| code |
@@ -59,7 +85,7 @@ ChatCodeBuilder >> collectPlainClass: theClass stream: stream [
 		self collectPlainMethod: m stream: stream ]
 ]
 
-{ #category : 'selectedSource' }
+{ #category : 'private' }
 ChatCodeBuilder >> collectPlainMethod: method stream: stream [
 		(exportedClasses includes: (method methodClass name)) ifTrue: [ ^ #allreadyExists ].
 	stream
@@ -69,16 +95,15 @@ ChatCodeBuilder >> collectPlainMethod: method stream: stream [
 		cr
 ]
 
-{ #category : 'selectedSource' }
+{ #category : 'private' }
 ChatCodeBuilder >> collectPlainPackage: aPackage stream: stream [
 	aPackage classes do: [ :c | self collectPlainClass: c stream: stream ].
 ]
 
-{ #category : 'tempCollector' }
-ChatCodeBuilder >> collectTemporaryClasses [
+{ #category : 'private' }
+ChatCodeBuilder >> collectTemporaryClasses: stream [
 
-	| tempClasses stream currentPackage tempPackage |
-	stream := WriteStream on: String new.
+	| tempClasses currentPackage tempPackage |
 	currentPackage := application currentPackage.
 	tempPackage := currentPackage , 'Temp'.
 	tempClasses := tempPackage asPackage classes.
@@ -93,10 +118,10 @@ ChatCodeBuilder >> collectTemporaryClasses [
 			stream
 				nextPutAll: code;
 				cr.
-			exportedClasses add: (c name copyReplaceAll: 'Temp' with: '').	
+			exportedClasses add: (c name copyReplaceAll: 'Temp' with: '').
 			self collectMethodsFromTemporaryClass: c stream: stream.
 			self collectMethodsFromTemporaryClass: c class stream: stream ] ].
-	^ stream contents
+	^ #ok.
 ]
 
 { #category : 'copying' }
@@ -142,7 +167,7 @@ ChatCodeBuilder >> initialize [
 	exportedClasses := Set new
 ]
 
-{ #category : 'removing' }
+{ #category : 'private' }
 ChatCodeBuilder >> removeTempFromFirstAndLastLine: inputString [
     | lines |
     lines := inputString lines.

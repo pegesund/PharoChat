@@ -172,51 +172,6 @@ ChatBot classSide >> chatOpenBrowserOn: className selector: methodName [
 ]
 
 { #category : 'source' }
-ChatBot classSide >> chatSourceCodeForPackage: aPackageName [
-
-	| package classes sourceCode |
-	package := self packageOrganizer packageNamed: aPackageName.
-	classes := package definedClasses.
-	sourceCode := String streamContents: [ :stream |
-		              classes do: [ :class |
-			              stream
-				              nextPutAll: class definitionString;
-				              nextPut: Character cr;
-				              nextPut: Character cr.
-
-			              "Add class comment"
-			              stream
-				              nextPutAll: '"';
-				              nextPutAll: (class comment ifNil: [ '' ]);
-				              nextPutAll: '"';
-				              nextPut: Character cr;
-				              nextPut: Character cr.
-
-			              "Instance methods"
-			              stream
-				              nextPutAll: '!Instance methods!';
-				              nextPut: Character cr;
-				              nextPut: Character cr.
-			              class methods do: [ :method |
-				              stream
-					              nextPutAll: method sourceCode;
-					              nextPut: Character cr;
-					              nextPut: Character cr ].
-
-			              "Class methods"
-			              stream
-				              nextPutAll: '!Class methods!';
-				              nextPut: Character cr;
-				              nextPut: Character cr.
-			              class class methods do: [ :method |
-				              stream
-					              nextPutAll: method sourceCode;
-					              nextPut: Character cr;
-					              nextPut: Character cr ] ] ].
-	^ sourceCode
-]
-
-{ #category : 'source' }
 ChatBot classSide >> chatStringToMethodSymbol: aString [
 	"Converts a string of method signatur type to a symbol"
     | parts selector |

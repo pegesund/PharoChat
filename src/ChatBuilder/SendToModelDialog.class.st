@@ -115,11 +115,12 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 
 (source includesKey: 'methods') ifTrue: [ 
 		methods := source at: 'methods'.
-	methods do: [ :each |
+	methods do: [ :each | |methodSource|
 		i := i + 1.
+		methodSource := cb transformIncomingMethod: (each at: 'source').
 		codePresenter addCodeEditorWithToolbar:
 			(each at: 'createOrUpdate') = 'update'.
-		codePresenter textAt: i put: (each at: 'source') ].
+		codePresenter textAt: i put: methodSource ].
  ].
 	win := codePresenter open.
 	^ #ok

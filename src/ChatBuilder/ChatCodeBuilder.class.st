@@ -231,3 +231,28 @@ ChatCodeBuilder >> transformIncomingClass: classStr [
 		^ 'Error, tries to redfine this class:' , classStr ].
 	^ classStr
 ]
+
+{ #category : 'incomingSource' }
+ChatCodeBuilder >> transformIncomingMethod: methodStr [
+	"Change all references to methods to match objects in temp package"
+
+	| ast literals stream theClassName methodStrWithoutClassName |
+	   theClassName := (ChatBot chatExtractMethodInfo: methodStr) at: 'className'.
+	   methodStrWithoutClassName := methodStr copyWithRegex: '^.*>> *' matchesReplacedWith: ''.
+	
+	   stream := stream := WriteStream on: String new.
+		ast := RBParser parseMethod: methodStrWithoutClassName. 
+		"Get literals from the AST"
+		literals := ast allChildren select: [ :node |
+			            node isKindOf: RBVariableNode ].
+		literals := literals select: [ :node |
+			          classesInTempPackage includes: (node name , 'Temp') ].
+		literals do: [ :node |
+				node name:  (node name , 'Temp')].
+		stream
+		   nextPutAll: theClassName;
+			nextPutAll: ' >> ';
+			nextPutAll: ast formattedCode;
+			cr.
+			^ stream contents.
+]

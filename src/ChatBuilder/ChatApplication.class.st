@@ -77,7 +77,7 @@ ChatApplication >> concatenateInfoForAPI [
 	stream nextPutAll:
 		'Relevant source code in current project is found here. Suggest changes in this codebase also if needed to formulate the reply. Current source: '.
 	stream
-		nextPutAll: (ChatBot chatSourceCodeForPackage: currentPackage);
+		"nextPutAll: (ChatBot chatSourceCodeForPackage: currentPackage);"
 		cr.
 	^ stream contents
 ]

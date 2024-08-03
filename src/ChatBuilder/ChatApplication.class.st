@@ -60,7 +60,7 @@ ChatApplication >> concatenateInfoForAPI [
 	| pkg stream |
 	pkg := currentPackage
 		       ifNil: [ 'NopacageSpecified' ]
-		       ifNotNil: [ currentPackage ].
+		       ifNotNil: [ currentPackage , 'Temp' ].
 	stream := WriteStream on: String new.
 
 	userConversation ifNil: [ ^ '' ].

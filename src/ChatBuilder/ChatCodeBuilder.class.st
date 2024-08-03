@@ -8,7 +8,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'application',
-		'exportedClasses'
+		'exportedClasses',
+		'classesInTempPackage',
+		'classesInOrigPackage'
 	],
 	#category : 'ChatBuilder-code',
 	#package : 'ChatBuilder',
@@ -181,4 +183,27 @@ ChatCodeBuilder >> removeTempFromFirstAndLastLine: inputString [
     ].
     
     ^ String cr join: lines
+]
+
+{ #category : 'initialization' }
+ChatCodeBuilder >> setCurrentClasses [
+
+	classesInTempPackage := application currentPackage asPackage classes.
+	classesInOrigPackage := (application currentPackage
+	                        , 'Temp') asPackage classes
+]
+
+{ #category : 'incomingSource' }
+ChatCodeBuilder >> transformIncomingClass: classStr [
+	"Make sure class does not reference classes in original package, unless non existent in temp package. New classes should be created in the temp package"
+
+	| def cName |
+	classStr inspect.
+	def := CDFluidClassDefinitionParser parse: classStr.
+	cName := def className.
+	"Class allready exist in orig"
+	(classesInOrigPackage includes: cName)
+	& (classesInTempPackage includes: cName , 'Temp') not ifTrue: [
+		^ 'Error, tries to redfine this class:' , classStr ].
+	^ classStr
 ]

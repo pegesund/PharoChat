@@ -92,7 +92,7 @@ SendToModelDialog >> initializeWindow: aWindowPresenter [
 { #category : 'codeUI' }
 SendToModelDialog >> openCodeWindow: codeAsJson [
 	"Opens window which suggested code changes from api"
-	| codePresenter win methods theClasses i source |
+	| codePresenter win methods theClasses i source cb |
 	codeAsJson = #done ifTrue: [ ^ #done ].
 	codePresenter := MultiCodePresenterWithToolbars new.
 	source := codeAsJson at: 'source'.
@@ -100,13 +100,17 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 		(source at: 'explanation').
 
 	i := 0.
+	cb := ChatCodeBuilder new.
+	cb application: application.
+	cb setCurrentClasses .
 	(source includesKey: 'classes') ifTrue: [ 	
 			theClasses := source at: 'classes'.
-	theClasses do: [ :each |
+	theClasses do: [ :each | | classSource |
 		i := i + 1.
 		codePresenter addCodeEditorWithToolbar:
 			(each at: 'createOrUpdate') = 'update'.
-		codePresenter textAt: i put: (each at: 'source') ].
+		classSource := cb transformIncomingClass: (each at: 'source').	
+		codePresenter textAt: i put: classSource ].
  ].
 
 (source includesKey: 'methods') ifTrue: [ 

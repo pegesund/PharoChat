@@ -96,33 +96,42 @@ SendToModelDialog >> openCodeWindow: codeAsJson [
 	| codePresenter win methods theClasses i source cb |
 	codeAsJson = #done ifTrue: [ ^ #done ].
 	codePresenter := MultiCodePresenterWithToolbars new.
-	source := codeAsJson at: 'source'.
-	codePresenter setExplanationText: (source at: 'explanation').
-
 	i := 0.
-	cb := ChatCodeBuilder new.
-	cb application: application.
-	cb setCurrentClasses.
-	(source includesKey: 'classes') ifTrue: [
-		theClasses := source at: 'classes'.
-		theClasses do: [ :each |
-			| classSource |
-			i := i + 1.
-			codePresenter addCodeEditorWithToolbar:
-				(each at: 'createOrUpdate') = 'update'.
-			classSource := cb transformIncomingClass: (each at: 'source').
-			codePresenter textAt: i put: classSource ] ].
 
-	(source includesKey: 'methods') ifTrue: [
-		methods := source at: 'methods'.
-		methods do: [ :each |
-			| methodSource |
-			i := i + 1.
-			methodSource := cb transformIncomingMethod: (each at: 'source').
-			codePresenter addCodeEditorWithToolbar:
-				(each at: 'createOrUpdate') = 'update'.
-			codePresenter textAt: i put: methodSource ] ].
-	(i = 0) ifTrue: [ codePresenter updateLayout. ].
+	(codeAsJson includesKey: 'source')
+		ifTrue: [
+			source := codeAsJson at: 'source'.
+			codePresenter setExplanationText: (source at: 'explanation').
+
+			cb := ChatCodeBuilder new.
+			cb application: application.
+			cb setCurrentClasses.
+			(source includesKey: 'classes') ifTrue: [
+				theClasses := source at: 'classes'.
+				theClasses do: [ :each |
+					| classSource |
+					i := i + 1.
+					codePresenter addCodeEditorWithToolbar:
+						(each at: 'createOrUpdate') = 'update'.
+					classSource := cb transformIncomingClass: (each at: 'source').
+					codePresenter textAt: i put: classSource ] ].
+
+			(source includesKey: 'methods') ifTrue: [
+				methods := source at: 'methods'.
+				methods do: [ :each |
+					| methodSource |
+					i := i + 1.
+					methodSource := cb transformIncomingMethod: (each at: 'source').
+					codePresenter addCodeEditorWithToolbar:
+						(each at: 'createOrUpdate') = 'update'.
+					codePresenter textAt: i put: methodSource ] ] ]
+		ifFalse: [
+			codePresenter setExplanationText:
+				((codeAsJson includesKey: 'result')
+					 ifTrue: [ codeAsJson at: 'result' ]
+					 ifFalse: [ 'No result from chatbot' ]) ].
+
+	i = 0 ifTrue: [ codePresenter updateLayout ].
 	win := codePresenter open.
 	^ #ok
 ]

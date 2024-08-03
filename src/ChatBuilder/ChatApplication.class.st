@@ -57,7 +57,11 @@ ChatApplication >> apiContent: anObject [
 { #category : 'builder' }
 ChatApplication >> concatenateInfoForAPI [
 
-	| pkg stream |
+	| pkg stream ccb sendCode |
+	ccb := ChatCodeBuilder new.
+	ccb application: self.
+	sendCode := ccb collectAllCode.
+
 	pkg := currentPackage
 		       ifNil: [ 'NopacageSpecified' ]
 		       ifNotNil: [ currentPackage , 'Temp' ].
@@ -76,9 +80,8 @@ ChatApplication >> concatenateInfoForAPI [
 	currentPackage ifNil: [ ^ stream contents ].
 	stream nextPutAll:
 		'Relevant source code in current project is found here. Suggest changes in this codebase also if needed to formulate the reply. Current source: '.
-	stream
-		"nextPutAll: (ChatBot chatSourceCodeForPackage: currentPackage);"
-		cr.
+	stream cr;
+	nextPutAll: sendCode .
 	^ stream contents
 ]
 

@@ -5,7 +5,6 @@ Class {
 	#name : 'ChatClassSelector',
 	#superclass : 'SpPresenter',
 	#instVars : [
-		'classList',
 		'classSearchPresenter'
 	],
 	#category : 'ChatBuilder-UI',
@@ -57,7 +56,7 @@ ChatClassSelector >> initializePresenters [
 { #category : 'state' }
 ChatClassSelector >> selectClasses [
 	"Action to handle the class selection button click event."
-
+   | classList |
 	classList := classSearchPresenter chosenItems.
 	self application selectedClasses: classList
 ]

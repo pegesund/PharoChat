@@ -31,11 +31,7 @@ SendToModelDialog >> application [
 { #category : 'initialization' }
 SendToModelDialog >> initialize [
 
-	| ccb |
 	super initialize.
-	ccb := ChatCodeBuilder new.
-	ccb application: application. 
-	sendCode := ccb collectAllCode .
 	self initializePresenters
 ]
 
@@ -62,8 +58,7 @@ SendToModelDialog >> initializePresenters [
 					  to: self)
 			 height: 200;
 			 add: 'Selected Methods' expand: false;
-			 add: self newText
-			 height: 200;
+			 add: self newText height: 200;
 			 add: 'Select Model' expand: false;
 			 add: (modelSelector := self newDropList
 					                   items:
@@ -76,7 +71,18 @@ SendToModelDialog >> initializePresenters [
 						  | codeAsJson |
 						  codeAsJson := self application sendToChatModel:
 								                modelSelector selectedItem.
-						  self openCodeWindow: codeAsJson ])
+						  [
+						  self openCodeWindow: codeAsJson ]
+							  on: Exception
+							  do: [
+								  | dialog |
+								  codeAsJson inspect.
+								  dialog := SpAlertDialog new.
+								  dialog
+									  title: 'Error in chat communcation';
+									  label: 'Check inspect of result for debugging';
+									  acceptLabel: 'Close';
+									  openModal ] ])
 			 height: 40;
 			 yourself)
 ]

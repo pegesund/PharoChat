@@ -92,36 +92,37 @@ SendToModelDialog >> initializeWindow: aWindowPresenter [
 { #category : 'codeUI' }
 SendToModelDialog >> openCodeWindow: codeAsJson [
 	"Opens window which suggested code changes from api"
+
 	| codePresenter win methods theClasses i source cb |
 	codeAsJson = #done ifTrue: [ ^ #done ].
 	codePresenter := MultiCodePresenterWithToolbars new.
 	source := codeAsJson at: 'source'.
-	codePresenter setExplanationText:
-		(source at: 'explanation').
+	codePresenter setExplanationText: (source at: 'explanation').
 
 	i := 0.
 	cb := ChatCodeBuilder new.
 	cb application: application.
-	cb setCurrentClasses .
-	(source includesKey: 'classes') ifTrue: [ 	
-			theClasses := source at: 'classes'.
-	theClasses do: [ :each | | classSource |
-		i := i + 1.
-		codePresenter addCodeEditorWithToolbar:
-			(each at: 'createOrUpdate') = 'update'.
-		classSource := cb transformIncomingClass: (each at: 'source').	
-		codePresenter textAt: i put: classSource ].
- ].
+	cb setCurrentClasses.
+	(source includesKey: 'classes') ifTrue: [
+		theClasses := source at: 'classes'.
+		theClasses do: [ :each |
+			| classSource |
+			i := i + 1.
+			codePresenter addCodeEditorWithToolbar:
+				(each at: 'createOrUpdate') = 'update'.
+			classSource := cb transformIncomingClass: (each at: 'source').
+			codePresenter textAt: i put: classSource ] ].
 
-(source includesKey: 'methods') ifTrue: [ 
+	(source includesKey: 'methods') ifTrue: [
 		methods := source at: 'methods'.
-	methods do: [ :each | |methodSource|
-		i := i + 1.
-		methodSource := cb transformIncomingMethod: (each at: 'source').
-		codePresenter addCodeEditorWithToolbar:
-			(each at: 'createOrUpdate') = 'update'.
-		codePresenter textAt: i put: methodSource ].
- ].
+		methods do: [ :each |
+			| methodSource |
+			i := i + 1.
+			methodSource := cb transformIncomingMethod: (each at: 'source').
+			codePresenter addCodeEditorWithToolbar:
+				(each at: 'createOrUpdate') = 'update'.
+			codePresenter textAt: i put: methodSource ] ].
+	(i = 0) ifTrue: [ codePresenter updateLayout. ].
 	win := codePresenter open.
 	^ #ok
 ]

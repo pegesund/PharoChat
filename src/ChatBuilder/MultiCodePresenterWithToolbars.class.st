@@ -160,12 +160,13 @@ MultiCodePresenterWithToolbars >> showGraphicalDiff: anEditor [
 			| sourceWithSingatureOnly |
 			sourceWithSingatureOnly := (methodInfo at: 'signature') , String cr
 			                           , (methodInfo at: 'source').
-			sourceWithSingatureOnly inspect.
-			content := (RBParser parseMethod: sourceWithSingatureOnly )
+
+			content := (RBParser parseMethod: sourceWithSingatureOnly)
 				           formattedCode ]
 				on: Exception
 				do: [ :e |
-					ChatMainWindow chatShowErrorMsg: 'Suggested code is not parsable'. e signal ].
+					ChatMainWindow chatShowErrorMsg: 'Suggested code is not parsable'.
+					e signal ].
 			content := (methodInfo at: 'className') , ' >> ' , content ].
 
 	diffPresenter := SpDiffPresenter new.

@@ -45,7 +45,7 @@ ChatCodeBuilder >> collectAllCode [
 						self collectPlainClass: s selectedClassName stream: stream ]
 					ifNotNil: [ "It is a method"
 						self collectPlainMethod: s selectedMethodName stream: stream ] ] ].
-			(stream contents) inspect.
+		
 
 	^ stream contents
 ]

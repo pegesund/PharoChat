@@ -243,9 +243,8 @@ ChatApplication >> sendToChatModel: modelName [
 
 	res := model
 		       sendModel: modelName
-		       user: self concatenateInfoForAPI 
+		       user: self concatenateInfoForAPI
 		       system: systemConversation.
-	res inspect.
 	^ res
 ]
 

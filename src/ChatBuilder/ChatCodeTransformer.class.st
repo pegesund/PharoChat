@@ -127,28 +127,6 @@ ChatCodeTransformer >> application: anObject [
 ]
 
 { #category : 'transform' }
-ChatCodeTransformer >> ensureCurrentTempPackage [
-	"Creates temporary package if needed!!"
-
-	| organizer basePackage testPackage packageNameString |
-	packageNameString := application currentPackage , 'Temp'.
-	organizer := self packageOrganizer .
-
-	"Create base package if it doesn't exist"
-	basePackage := organizer
-		               packageNamed: packageNameString
-		               ifAbsent: [ organizer addPackage: packageNameString ].
-
-	"Create test package if it doesn't exist"
-	testPackage := organizer
-		               packageNamed: packageNameString , '-Tests'
-		               ifAbsent: [
-		               organizer addPackage: packageNameString , '-Tests' ].
-
-	^ Array with: basePackage with: testPackage
-]
-
-{ #category : 'transform' }
 ChatCodeTransformer >> getAllMethodsAndClassesFromTempPackage: packageNameString [
 
 	| package classes result |

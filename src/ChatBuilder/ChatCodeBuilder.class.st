@@ -21,6 +21,9 @@ Class {
 ChatCodeBuilder >> application: app [
 
 application := app.
+self ensureCurrentTempPackage .
+self setCurrentClasses .
+
 ]
 
 { #category : 'selectedSource' }
@@ -158,6 +161,28 @@ ChatCodeBuilder >> copyClassesFromOrigToTemp [
 				 compile: ast formattedCode ] ] ]
 ]
 
+{ #category : 'transform' }
+ChatCodeBuilder >> ensureCurrentTempPackage [
+	"Creates temporary package if needed!!"
+
+	| organizer basePackage testPackage packageNameString |
+	packageNameString := application currentPackage , 'Temp'.
+	organizer := self packageOrganizer .
+
+	"Create base package if it doesn't exist"
+	basePackage := organizer
+		               packageNamed: packageNameString
+		               ifAbsent: [ organizer addPackage: packageNameString ].
+
+	"Create test package if it doesn't exist"
+	testPackage := organizer
+		               packageNamed: packageNameString , '-Tests'
+		               ifAbsent: [
+		               organizer addPackage: packageNameString , '-Tests' ].
+
+	^ Array with: basePackage with: testPackage
+]
+
 { #category : 'initialization' }
 ChatCodeBuilder >> initialize [
 
@@ -198,7 +223,6 @@ ChatCodeBuilder >> transformIncomingClass: classStr [
 	"Make sure class does not reference classes in original package, unless non existent in temp package. New classes should be created in the temp package"
 
 	| def cName |
-	classStr inspect.
 	def := CDFluidClassDefinitionParser parse: classStr.
 	cName := def className.
 	"Class allready exist in orig"

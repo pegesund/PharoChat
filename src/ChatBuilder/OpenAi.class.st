@@ -78,7 +78,12 @@ OpenAi >> sendModel: modelName user: user system: system [
 			jsonObject := STONJSON fromString: response contents.
 			client close ]
 		ifFalse: [
+			| dialog |
+			dialog := SpAlertDialog new.
+			dialog title: 'Error'; label: 'Something went wrong, did you set the api key, for example?';
+			acceptLabel: 'Close'; openDialog .
 			client close.
+			
 			self error: response status asString ].
 
 	content := STONJSON fromString: (self class removeFirstAndLastLines:

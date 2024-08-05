@@ -213,9 +213,9 @@ ChatCodeBuilder >> removeTempFromFirstAndLastLine: inputString [
 { #category : 'initialization' }
 ChatCodeBuilder >> setCurrentClasses [
 
-	classesInTempPackage := application currentPackage asPackage classes.
-	classesInOrigPackage := (application currentPackage
-	                        , 'Temp') asPackage classes
+	classesInOrigPackage := (application currentPackage asPackage classes) collect: [ :c | c name ].
+	classesInTempPackage := ((application currentPackage , 'Temp')
+		                        asPackage classes) collect: [ :c | c name ].
 ]
 
 { #category : 'incomingSource' }
@@ -237,22 +237,27 @@ ChatCodeBuilder >> transformIncomingMethod: methodStr [
 	"Change all references to methods to match objects in temp package"
 
 	| ast literals stream theClassName methodStrWithoutClassName |
-	   theClassName := (ChatBot chatExtractMethodInfo: methodStr) at: 'className'.
-	   methodStrWithoutClassName := methodStr copyWithRegex: '^.*>> *' matchesReplacedWith: ''.
-	
-	   stream := stream := WriteStream on: String new.
-		ast := RBParser parseMethod: methodStrWithoutClassName. 
-		"Get literals from the AST"
-		literals := ast allChildren select: [ :node |
-			            node isKindOf: RBVariableNode ].
-		literals := literals select: [ :node |
-			          classesInTempPackage includes: (node name , 'Temp') ].
-		literals do: [ :node |
-				node name:  (node name , 'Temp')].
-		stream
-		   nextPutAll: theClassName;
-			nextPutAll: ' >> ';
-			nextPutAll: ast formattedCode;
-			cr.
-			^ stream contents.
+	theClassName := (ChatBot chatExtractMethodInfo: methodStr) at:
+		                'className'.
+	methodStrWithoutClassName := methodStr
+		                             copyWithRegex: '^.*>> *'
+		                             matchesReplacedWith: ''.
+
+	stream := stream := WriteStream on: String new.
+	ast := RBParser parseMethod: methodStrWithoutClassName.
+	"Get literals from the AST"
+	literals := ast allChildren select: [ :node |
+		            node isKindOf: RBVariableNode ].
+	literals := literals select: [ :node |
+		            classesInTempPackage includes: node name , 'Temp' ].
+	literals do: [ :node | node name: node name , 'Temp' ].
+	{classesInTempPackage . theClassName} inspect.
+	(classesInTempPackage includes: theClassName, 'Temp') ifTrue: [
+		theClassName := theClassName , 'Temp' ].
+	stream
+		nextPutAll: theClassName;
+		nextPutAll: ' >> ';
+		nextPutAll: ast formattedCode;
+		cr.
+	^ stream contents
 ]

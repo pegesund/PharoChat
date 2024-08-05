@@ -69,6 +69,24 @@ ChatMainWindow class >> open [
     ^ window open
 ]
 
+{ #category : 'gui' }
+ChatMainWindow class >> promptAndSetOpenAIAPIKey [
+    | apiKey |
+    apiKey := UIManager default 
+        request: 'Enter your OpenAI API Key:'
+        initialAnswer: ''
+        title: 'OpenAI API Key'.
+    
+    apiKey ifNotNil: [
+        apiKey ifNotEmpty: [
+            ChatEnvironment setApiKey: apiKey.
+            UIManager default inform: 'API Key has been set successfully.'
+        ] ifEmpty: [
+            UIManager default inform: 'API Key cannot be empty.'
+        ]
+    ]
+]
+
 { #category : 'layout' }
 ChatMainWindow >> defaultLayout [
 

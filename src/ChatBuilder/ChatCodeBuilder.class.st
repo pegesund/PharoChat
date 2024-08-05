@@ -261,3 +261,19 @@ ChatCodeBuilder >> transformIncomingMethod: methodStr [
 		cr.
 	^ stream contents
 ]
+
+{ #category : 'outgoingSource' }
+ChatCodeBuilder >> transformOutgoingClasses [
+	"This moves all object from the temp pacage and back to the original package"
+
+	| origClassName origPackage |
+	origPackage := application currentPackage asPackage.
+	classesInTempPackage do: [ :cName |
+		origClassName := cName withoutSuffix: 'Temp'.
+		(self class environment hasClassNamed: origClassName) ifTrue: [ "Remove old class"
+			(self class environment at: origClassName) removeFromSystem.
+			"Rename new to without Temp name"
+			(self class environment at: cName) rename: origClassName.
+			(self class environment at: origClassName) package: origPackage ].
+		(self class environment at: cName) package: origPackage ]
+]

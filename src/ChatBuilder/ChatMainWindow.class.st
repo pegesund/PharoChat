@@ -12,7 +12,8 @@ Class {
 		'userConversationDialog',
 		'systemConversationDialog',
 		'openPackageSelectorButton',
-		'addSourceButton'
+		'addSourceButton',
+		'moveCodeToOrigButton'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -93,6 +94,7 @@ ChatMainWindow >> defaultLayout [
 	application mainWindow: self.
 
 	^ SpBoxLayout newVertical
+	     add: moveCodeToOrigButton ;
 		  add: addSourceButton;
 		  add: openClassSelectorButton;
 		  add: openUserConversationButton;
@@ -151,19 +153,29 @@ ChatMainWindow >> initializePresenters [
 			                                self openSystemConversation ].
 
 
+	moveCodeToOrigButton := self newButton
+		                        label: 'Realize temporay package';
+		                        action: [
+			                        | dialog |
+			                        dialog := SpConfirmDialog new.
+			                        dialog
+				                        title:
+					                        'Will replace old classe in orig package';
+				                        label: 'Are you sure?';
+				                        acceptLabel: 'Sure!';
+				                        cancelLabel: 'No, forget it';
+				                        onAccept: [ | ccb |
+													ccb := ChatCodeBuilder new.
+													ccb application: application .
+													ccb transformOutgoingClasses .
+												 ];
+				                        onCancel: [ dialog inform: 'No!' ];
+				                        openDialog ].
 
 
 	"Initialize dialog instances"
 	userConversationDialog := nil.
-	systemConversationDialog := nil.
-
-	^ SpBoxLayout newVertical
-		  add: openClassSelectorButton;
-		  add: openUserConversationButton;
-		  add: openSystemConversationButton;
-		  add: openPackageSelectorButton;
-		  add: sendConversationButton;
-		  yourself
+	systemConversationDialog := nil
 ]
 
 { #category : 'ui' }

@@ -251,8 +251,7 @@ ChatCodeBuilder >> transformIncomingMethod: methodStr [
 	literals := literals select: [ :node |
 		            classesInTempPackage includes: node name , 'Temp' ].
 	literals do: [ :node | node name: node name , 'Temp' ].
-	{classesInTempPackage . theClassName} inspect.
-	(classesInTempPackage includes: theClassName, 'Temp') ifTrue: [
+	(classesInTempPackage includes: theClassName , 'Temp') ifTrue: [
 		theClassName := theClassName , 'Temp' ].
 	stream
 		nextPutAll: theClassName;
@@ -270,10 +269,17 @@ ChatCodeBuilder >> transformOutgoingClasses [
 	origPackage := application currentPackage asPackage.
 	classesInTempPackage do: [ :cName |
 		origClassName := cName withoutSuffix: 'Temp'.
-		(self class environment hasClassNamed: origClassName) ifTrue: [ "Remove old class"
-			(self class environment at: origClassName) removeFromSystem.
-			"Rename new to without Temp name"
-			(self class environment at: cName) rename: origClassName.
-			(self class environment at: origClassName) package: origPackage ].
-		(self class environment at: cName) package: origPackage ]
+		((self class environment hasClassNamed: origClassName) and: [
+			 (self class environment classNamed: origClassName) package
+				 name = application currentPackage ])
+			ifTrue: [ "Remove old class"
+				(self class environment classNamed: origClassName)
+					removeFromSystem.
+				"Rename new to without Temp name"
+				(self class environment classNamed: cName) rename: origClassName.
+				(self class environment classNamed: origClassName) package:
+					origPackage ]
+			ifFalse: [
+			(self class environment classNamed: cName) package: origPackage ] ].
+			self inform: 'Classes moved'.
 ]

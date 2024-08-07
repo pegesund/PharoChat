@@ -13,7 +13,8 @@ Class {
 		'systemConversationDialog',
 		'openPackageSelectorButton',
 		'addSourceButton',
-		'moveCodeToOrigButton'
+		'moveCodeToOrigButton',
+		'urlButton'
 	],
 	#category : 'ChatBuilder-UI',
 	#package : 'ChatBuilder',
@@ -94,11 +95,12 @@ ChatMainWindow >> defaultLayout [
 	application mainWindow: self.
 
 	^ SpBoxLayout newVertical
-	     add: moveCodeToOrigButton ;
+		  add: moveCodeToOrigButton;
 		  add: addSourceButton;
 		  add: openClassSelectorButton;
 		  add: openUserConversationButton;
 		  add: openSystemConversationButton;
+		  add: urlButton ;
 		  add: openPackageSelectorButton;
 		  add: sendConversationButton;
 		  yourself
@@ -142,6 +144,7 @@ ChatMainWindow >> initializePresenters [
 	sendConversationButton := self newButton
 		                          label: 'Send Conversation';
 		                          action: [ self openSendConversationDialog ].
+	urlButton := self newButton label: 'Add url'; action: [ self openUrls  ].	
 
 	openUserConversationButton := self newButton
 		                              label: 'Open User Conversation';
@@ -164,11 +167,11 @@ ChatMainWindow >> initializePresenters [
 				                        label: 'Are you sure?';
 				                        acceptLabel: 'Sure!';
 				                        cancelLabel: 'No, forget it';
-				                        onAccept: [ | ccb |
-													ccb := ChatCodeBuilder new.
-													ccb application: application .
-													ccb transformOutgoingClasses .
-												 ];
+				                        onAccept: [
+					                        | ccb |
+					                        ccb := ChatCodeBuilder new.
+					                        ccb application: application.
+					                        ccb transformOutgoingClasses ];
 				                        onCancel: [ dialog inform: 'No!' ];
 				                        openDialog ].
 
@@ -230,6 +233,16 @@ ChatMainWindow >> openTextDialog: title initialText: initialText onAccept: accep
     ^ dialog
 ]
 
+{ #category : 'ui' }
+ChatMainWindow >> openUrls [
+
+	| dialog |
+	dialog := ChatScraper newApplication: application.
+	dialog open.
+	dialog window title: 'Add urls'.
+	dialog window resize: 1000 @ 500.
+]
+
 { #category : 'initialization' }
 ChatMainWindow >> openUserConversation [
 
@@ -242,12 +255,6 @@ ChatMainWindow >> openUserConversation [
 		                          onAccept: [ :text |
 		                          self application userConversation: text ].
 	userConversationDialog title: 'Enter user conversation text'
-]
-
-{ #category : 'ui' }
-ChatMainWindow >> sendConversationToModel: modelName [
-    "Implement the logic to send the conversation to the selected model"
-    self inform: 'Sending conversation to ', modelName.
 ]
 
 { #category : 'TOREMOVE' }

@@ -15,45 +15,49 @@ Class {
 
 { #category : 'adding' }
 MultiCodePresenterWithToolbars >> addCodeEditorWithToolbar: isUpdate [
+
 	| newEditor newToolbar pair statusLabel |
-newEditor := self instantiate: SpCodePresenter.
-newEditor beForScripting.
-statusLabel := self newLabel label: 'Ready'.
-newToolbar := self newToolbar
-addItem: (SpToolbarButtonPresenter new
-label: 'Compile';
-icon: (self iconNamed: #smallSave);
-help: 'Compile';
-action: [ self chatCompileEditor: newEditor ];
-yourself);
-addItem: (SpToolbarButtonPresenter new
-label: 'Open';
-icon: (self iconNamed: #openIcon);
-help: 'Open';
-action: [ self loadEditor: newEditor ];
-yourself).
+	newEditor := self instantiate: SpCodePresenter.
+	newEditor beForScripting.
+	statusLabel := self newLabel label: 'Ready'.
+	newToolbar := self newToolbar
+		              addItem: (SpToolbarButtonPresenter new
+				               label: 'Compile';
+				               icon: (self iconNamed: #smallSave);
+				               help: 'Compile';
+				               action: [ self chatCompileEditor: newEditor ];
+				               yourself);
+		              addItem: (SpToolbarButtonPresenter new
+				               label: 'Open';
+				               icon: (self iconNamed: #openIcon);
+				               help: 'Open';
+				               action: [ self loadEditor: newEditor ];
+				               yourself).
 
-isUpdate ifTrue: [
-newToolbar addItem: (SpToolbarButtonPresenter new
-label: 'Diff';
-icon: (self iconNamed: #diffIcon);  "Placeholder for the diff icon"
-help: 'Diff';
-action: [ self showGraphicalDiff: newEditor ];
-yourself) ].
+	isUpdate ifTrue: [
+		newToolbar addItem: (SpToolbarButtonPresenter new
+				 label: 'Diff';
+				 icon: (self iconNamed: #diffIcon);
+				 help: 'Diff';
+				 action: [ self showGraphicalDiff: newEditor ];
+				 yourself) ].
 
-newToolbar
-addItem: (SpToolbarButtonPresenter new
-label: 'Status:';
-help: 'Status';
-yourself);
-addItem: (SpToolbarButtonPresenter new
-label: 'Ready';
-help: 'Current status';
-yourself).
+	newToolbar
+		addItem: (SpToolbarButtonPresenter new
+				 label: 'Status:';
+				 help: 'Status';
+				 yourself);
+		addItem: (SpToolbarButtonPresenter new
+				 label: 'Ready';
+				 help: 'Current status';
+				 yourself).
 
-pair := { newToolbar. newEditor. statusLabel }.
-codeEditorPairs add: pair.
-self updateLayout.
+	pair := {
+		        newToolbar.
+		        newEditor.
+		        statusLabel }.
+	codeEditorPairs add: pair.
+	self updateLayout
 ]
 
 { #category : 'compiling' }

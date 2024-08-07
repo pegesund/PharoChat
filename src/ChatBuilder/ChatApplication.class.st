@@ -12,7 +12,8 @@ Class {
 		'currentPackage',
 		'selectedClasses',
 		'mainWindow',
-		'selectedSource'
+		'selectedSource',
+		'urlDict'
 	],
 	#category : 'ChatBuilder-chat',
 	#package : 'ChatBuilder',
@@ -28,6 +29,12 @@ ChatApplication >> addSelectedSource: source [
 	(names includes: (source name)) ifTrue: [ ^ #duplicate ].
 
 	selectedSource add: source
+]
+
+{ #category : 'adding' }
+ChatApplication >> addUrl: url content: content [
+
+	urlDict at: url put: content.
 ]
 
 { #category : 'accessing' }
@@ -97,6 +104,11 @@ ChatApplication >> currentPackage: anObject [
 	currentPackage := anObject
 ]
 
+{ #category : 'url' }
+ChatApplication >> getUrlContent: url [
+	^ urlDict at: url.
+]
+
 { #category : 'initialization' }
 ChatApplication >> initialize [
 
@@ -105,6 +117,7 @@ ChatApplication >> initialize [
 	savedMethods := OrderedCollection new.
 	selectedClasses := Set new.
 	selectedSource := OrderedCollection new.
+	urlDict := Dictionary new.
 	self systemConversation: '
 		
 		You are a Smalltalk programmer using Pharo 12. Relevant code is added in the json naming both methods and relevant classes for the question. If question contains information about creating source, please answer with a json containing a field named methods. This field contains an array of all the methods to create or update. Each method should have a name field, a source field and a field named createOrUpdate describing if the code should be created or updated. One field should contain the field explanation on the main changes. Make sure the json follows this format, the data here is just randomly created. Make sure the field "source" is the top tag if the answer contains code, this is important. If the answer suggests new classes/updated to classes this is to be found in the class tag. Make sure class source code is in the new format like, described in the example below. If the answer contains code it should always contain an explantation on what is done. Make sure to comment methods and classes. Make sure the answer contains only the json content, no loose text before or after the generated json.  Do not generate an explanation field without adding methods and/or classes.
@@ -174,7 +187,8 @@ Object << #MyClass
 		{ "result" = "here comes the content.." }
 		
 While creating classes and/or methods, make sure that classes which are bases for other new classes comes first in listing. Same goes for methods: Methods which are used by other new methods should be listed first.
-		
+
+Important: Do only keep definition of classes in the class-tag and methods in the method tag in the json. Do not put methods connected to any class (new or old)  in the "classes" tag. These should go under "methods"!		
 	'
 ]
 
@@ -197,6 +211,11 @@ ChatApplication >> removeSelectedSource: item [
 	names := selectedSource collect: [ :i | i asString ].
 	index := names indexOf: item asString.
 	selectedSource removeIndex: index
+]
+
+{ #category : 'url' }
+ChatApplication >> removeUrl: url [
+	urlDict removeKey: url.
 ]
 
 { #category : 'accessing' }
@@ -256,6 +275,12 @@ ChatApplication >> systemConversation [
 { #category : 'accessing' }
 ChatApplication >> systemConversation: aString [
     systemConversation := aString
+]
+
+{ #category : 'accessing' }
+ChatApplication >> urlList [
+
+	^ urlDict keys.
 ]
 
 { #category : 'accessing' }

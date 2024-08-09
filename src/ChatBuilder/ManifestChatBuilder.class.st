@@ -94,6 +94,13 @@ ManifestChatBuilder class >> ruleReNotOptimizedIfNilRuleV1FalsePositive [
 ]
 
 { #category : 'code-critics' }
+ManifestChatBuilder class >> ruleReNotOptimizedIfRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#ChatCodeBuilder #transformIncomingMethod: #false)) #'2024-08-09T16:17:17.680195+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestChatBuilder class >> ruleStringConcatenationRuleV1FalsePositive [
 
 	<ignoreForCoverage>

@@ -188,7 +188,9 @@ Object << #MyClass
 		
 While creating classes and/or methods, make sure that classes which are bases for other new classes comes first in listing. Same goes for methods: Methods which are used by other new methods should be listed first.
 
-Important: Do only keep definition of classes in the class-tag and methods in the method tag in the json. Do not put methods connected to any class (new or old)  in the "classes" tag. These should go under "methods"!		
+Important: Do only keep definition of classes in the class-tag and methods in the method tag in the json. Do not put methods connected to any class (new or old)  in the "classes" tag. These should go under "methods"!	
+
+Important: Do not suggest duplicate code. Do not add a class to the classes tag in the structure above unless there are changes to the class definition itself, like adding a slot.		
 	'
 ]
 

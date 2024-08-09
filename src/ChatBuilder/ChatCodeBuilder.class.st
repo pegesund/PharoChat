@@ -236,9 +236,11 @@ ChatCodeBuilder >> transformIncomingClass: classStr [
 ChatCodeBuilder >> transformIncomingMethod: methodStr [
 	"Change all references to methods to match objects in temp package"
 
-	| ast literals stream theClassName methodStrWithoutClassName |
+	| ast literals stream theClassName methodStrWithoutClassName methodType |
 	theClassName := (ChatBot chatExtractMethodInfo: methodStr) at:
 		                'className'.
+	methodType := (ChatBot chatExtractMethodInfo: methodStr) at:
+		                'methodType'. 	
 	methodStrWithoutClassName := methodStr
 		                             copyWithRegex: '^.*>> *'
 		                             matchesReplacedWith: ''.
@@ -255,6 +257,7 @@ ChatCodeBuilder >> transformIncomingMethod: methodStr [
 		theClassName := theClassName , 'Temp' ].
 	stream
 		nextPutAll: theClassName;
+		nextPutAll:  ((methodType = 'class') ifTrue: ' class' ifFalse: '');
 		nextPutAll: ' >> ';
 		nextPutAll: ast formattedCode;
 		cr.

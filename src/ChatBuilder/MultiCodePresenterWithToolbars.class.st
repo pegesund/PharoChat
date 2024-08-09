@@ -151,9 +151,14 @@ MultiCodePresenterWithToolbars >> showGraphicalDiff: anEditor [
 
 			signatureAsSymbol := ChatBot chatStringToMethodSymbol:
 				                     (methodInfo at: 'signature').
-			currentSource := (Smalltalk at:
-				                  (methodInfo at: 'className') asSymbol)
-				                 sourceCodeAt: signatureAsSymbol.
+			currentSource := ((methodInfo at: 'methodType') = 'class')
+				ifFalse: [
+					(Smalltalk at: (methodInfo at: 'className') asSymbol)
+						sourceCodeAt: signatureAsSymbol ]
+				ifTrue: [
+
+					(Smalltalk at: (methodInfo at: 'className') asSymbol) class
+						sourceCodeAt: signatureAsSymbol ].
 
 			currentSource := (RBParser parseMethod: currentSource)
 				                 formattedCode.

@@ -47,7 +47,7 @@ SendToModelDialog >> initializePresenters [
 					  text: (application systemConversation ifNil: [ '' ]);
 					  enabled: false;
 					  beNotEditable)
-			 height: 200;
+			 height: 300;
 			 add: 'User Conversation' expand: false;
 			 add: ((self newText
 					   text: application concatenateInfoForAPI;
@@ -56,9 +56,7 @@ SendToModelDialog >> initializePresenters [
 					  when: #mouseClick
 					  send: #openUserConversationDialog
 					  to: self)
-			 height: 200;
-			 add: 'Selected Methods' expand: false;
-			 add: self newText height: 200;
+			 height: 300;
 			 add: 'Select Model' expand: false;
 			 add: (modelSelector := self newDropList
 					                   items:
@@ -71,8 +69,7 @@ SendToModelDialog >> initializePresenters [
 						  | codeAsJson |
 						  codeAsJson := self application sendToChatModel:
 								                modelSelector selectedItem.
-						  [
-						  self openCodeWindow: codeAsJson ]
+						  [ self openCodeWindow: codeAsJson ]
 							  on: Exception
 							  do: [
 								  | dialog |
@@ -91,8 +88,7 @@ SendToModelDialog >> initializePresenters [
 SendToModelDialog >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 800 @ 900.
-
+	aWindowPresenter initialExtent: 800 @ 840
 ]
 
 { #category : 'codeUI' }

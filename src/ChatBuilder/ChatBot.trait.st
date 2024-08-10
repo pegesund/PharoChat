@@ -17,10 +17,11 @@ Trait {
 }
 
 { #category : 'tests' }
-ChatBot classSide >> chatCompileClass: sourceCode comment: comment [
+ChatBot classSide >> chatCompileClass: sourceCode [ 
 	"compiles a string a class"
 
-	| builder newClass targetPackage className ast |
+	| builder newClass targetPackage className ast comment|
+	comment := self chatExtractClassComment: sourceCode .
 	ast := CDFluidClassDefinitionParser parse: sourceCode.
 	builder := ShiftClassBuilder new
 		           buildEnvironment: self class environment;
@@ -72,9 +73,10 @@ ChatBot classSide >> chatCompileString: str [
 	| methodInfo source compObj |
 	(self chatDetectIfClassOrMethod: str)
 		ifTrue: [ "object"
-		compObj := [self chatCompileClass: str comment: 'Petter was here' ] on: Exception do: [ :ex | ex asString ].
-		^ compObj .
-		]
+			compObj := [ self chatCompileClass: str ]
+				           on: Exception
+				           do: [ :ex | ex asString ].
+			^ compObj ]
 		ifFalse: [ "method"
 			methodInfo := self chatExtractMethodInfo: str.
 			source := WriteStream on: String new.
@@ -94,6 +96,15 @@ ChatBot classSide >> chatDetectIfClassOrMethod: str [
 	"check if string contains definition on a class or method"
 
 	^ (str lines first) includesSubstring: '<<'
+]
+
+{ #category : 'source' }
+ChatBot classSide >> chatExtractClassComment: aString [
+	"Extracts the comment from the class definition string."
+
+	| linecomment |
+	linecomment := aString lines second trimBoth .
+	^ (linecomment withoutPrefix: '"') withoutSuffix: '"'
 ]
 
 { #category : 'source' }
